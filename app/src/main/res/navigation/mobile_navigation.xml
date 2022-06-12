@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.testing.presentation.ui.home.AddIngredientFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_addedIngredientsFragment"
+            app:destination="@id/addedIngredientsFragment" >
+            <argument
+                android:name="addedIngredientList"
+                app:argType="com.example.testing.domain.model.Ingredient[]" />
+        </action>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_setting"
+        android:name="com.example.testing.presentation.ui.setting.SettingFragment"
+        android:label="@string/menu_setting"
+        tools:layout="@layout/fragment_setting" />
+
+    <fragment
+        android:id="@+id/nav_favorite"
+        android:name="com.example.testing.presentation.ui.favorite.FavoriteFragment"
+        android:label="@string/menu_favorite"
+        tools:layout="@layout/fragment_favorite" />
+    <fragment
+        android:id="@+id/addedIngredientsFragment"
+        android:name="com.example.testing.presentation.ui.addedIngredients.AddedIngredientsFragment"
+        android:label="fragment_added_ingredients"
+        tools:layout="@layout/fragment_added_ingredients">
+        <argument
+            android:name="addedIngredientList"
+            app:argType="com.example.testing.domain.model.Ingredient[]" />
+        <action
+            android:id="@+id/action_addedIngredientsFragment_to_recommendedRecipesFragment"
+            app:destination="@id/recommendedRecipesFragment">
+            <argument
+                android:name="ingredientList"
+                app:argType="com.example.testing.domain.model.Ingredient[]" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/recommendedRecipesFragment"
+        android:name="com.example.testing.presentation.ui.recommendedRecipes.RecommendedRecipesFragment"
+        android:label="fragment_recommended_recipes"
+        tools:layout="@layout/fragment_recommended_recipes" >
+        <argument
+            android:name="ingredientList"
+            app:argType="com.example.testing.domain.model.Ingredient[]" />
+        <action
+            android:id="@+id/action_recommendedRecipesFragment_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.example.testing.presentation.ui.recipeDetail.RecipeDetailFragment"
+        android:label="fragment_recipe_detail"
+        tools:layout="@layout/fragment_recipe_detail" />
+</navigation>

@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Kitchef</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Jen H.</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_favorite">Favorite</string>
+    <string name="menu_setting">Setting</string>
+    <string name="search">Enter ingredients</string>
+    <string name="add_ingredients_message">Add your ingredients to find out more recipes</string>
+    <string name="view_ingredients_list">View ingredients list</string>
+    <string name="search_recipes">Search for recipes</string>
+    <string name="add_ingredient">Add</string>
+    <string name="search_ingredient">Search</string>
+    <string name="favorite_empty_state_message">Don\'t know what to eat? \n Click here to find out</string>
+    <string name="ingredient_list_example">1 bag (1 pound) frozen broccoli, carrots and cauliflower \n ⅓ cup basil pesto \n 2 tablespoons grated Parmesan cheese</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
