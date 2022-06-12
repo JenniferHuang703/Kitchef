@@ -14,8 +14,8 @@ class RecommendedRecipesViewModel(
         recipeRepository.getCurrentRecipe()
     }
 
-    fun fetchRecipes(ingredient: String) = viewModelScope.launch  {
-        recipeRepository.fetchRecipe(ingredient)
+    fun fetchRecipes(ingredient: String, ingrNb: Int) = viewModelScope.launch  {
+        recipeRepository.fetchRecipe(ingredient, ingrNb)
     }
 
 }

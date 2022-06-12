@@ -60,11 +60,15 @@ class AddedIngredientsFragment : Fragment(), KodeinAware {
     }
 
     private fun onClickListeners(view:View) {
+        var ingredientList = ArrayList<String>()
         val proceedToRecipeBtn = view.findViewById<Button>(R.id.proceedToRecipeBtn)
         proceedToRecipeBtn.setOnClickListener{
+            addedIngredientList.forEach {
+                ingredientList.add(it.title)
+            }
             val directions =
                 AddedIngredientsFragmentDirections.actionAddedIngredientsFragmentToRecommendedRecipesFragment(
-                    addedIngredientList.toTypedArray()
+                    ingredientList.toTypedArray()
                 )
             findNavController().navigate(directions)
         }

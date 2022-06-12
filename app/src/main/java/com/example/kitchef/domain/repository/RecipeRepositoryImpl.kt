@@ -21,8 +21,8 @@ class RecipeRepositoryImpl(
         }
     }
 
-    override suspend fun fetchRecipe(ingredient: String) {
-        recipeNetworkDataSource.fetchCurrentRecipe(ingredient, 2)
+    override suspend fun fetchRecipe(ingredient: String, ingrNb: Int) {
+        recipeNetworkDataSource.fetchCurrentRecipe(ingredient, ingrNb)
     }
 
     override suspend fun getCurrentRecipe(): LiveData<out RecipeResponse> {

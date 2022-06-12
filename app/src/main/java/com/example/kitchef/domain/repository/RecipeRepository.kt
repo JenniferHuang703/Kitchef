@@ -8,5 +8,5 @@ interface RecipeRepository {
     val recipeInfo: LiveData<RecipeResponse>
 
     suspend fun getCurrentRecipe(): LiveData<out RecipeResponse>
-    suspend fun fetchRecipe(ingredient: String)
+    suspend fun fetchRecipe(ingredient: String, ingrNb: Int)
 }
