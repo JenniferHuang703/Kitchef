@@ -9,16 +9,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kitchef.R
-import com.example.kitchef.common.StaticRecipeList
+import com.example.kitchef.data.db.entity.recipeModel.Recipe
 import com.example.kitchef.data.network.ConnectivityInterceptorImpl
 import com.example.kitchef.data.network.recipe.RecipeNetworkDataSourceImpl
 import com.example.kitchef.domain.api.RecipeApiService
 import com.example.kitchef.domain.model.Ingredient
-import com.example.kitchef.domain.model.Recipe
 import com.example.kitchef.presentation.ui.base.ScopeFragment
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +38,7 @@ class RecommendedRecipesFragment : ScopeFragment(), KodeinAware {
     private var recipesList = ArrayList<Recipe>()
     private var navController: NavController? = null
     private val args by navArgs<RecommendedRecipesFragmentArgs>()
-    private var addedIngredientList = ArrayList<Ingredient>()
+    private var addedIngredientList = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +52,12 @@ class RecommendedRecipesFragment : ScopeFragment(), KodeinAware {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(RecommendedRecipesViewModel::class.java)
-        viewModel.fetchRecipes(addedIngredientList[0].title)
+
+        var ingrNb = 2
+        if (args.ingredientList.size != 1)
+            ingrNb = args.ingredientList.size
+
+        viewModel.fetchRecipes(addedIngredientList, ingrNb)
 
         bindUI()
     }
@@ -60,9 +65,20 @@ class RecommendedRecipesFragment : ScopeFragment(), KodeinAware {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-        addRecipeItemToList()
-        addedIngredientList.addAll(args.ingredientList)
+        convertIngredientToURL(args.ingredientList)
         handleRecyclerView(view)
+    }
+
+    private fun convertIngredientToURL(ingredientList: Array<String>) {
+        var ingr_str = ""
+
+        ingredientList.forEach {
+            if(it != ingredientList.first())
+                ingr_str = "$ingr_str,"
+            ingr_str += it.lowercase()
+        }
+
+        addedIngredientList = ingr_str
     }
 
     private fun handleRecyclerView(view: View) {
@@ -74,7 +90,10 @@ class RecommendedRecipesFragment : ScopeFragment(), KodeinAware {
         recommendedRecipesAdapter.setOnClickListener(object :
             RecommendedRecipesAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
-                navController?.navigate(R.id.action_recommendedRecipesFragment_to_recipeDetailFragment)
+                val directions = RecommendedRecipesFragmentDirections.actionRecommendedRecipesFragmentToRecipeDetailFragment(
+                    recipesList[position]
+                )
+                findNavController().navigate(directions)
             }
         })
     }
@@ -82,31 +101,32 @@ class RecommendedRecipesFragment : ScopeFragment(), KodeinAware {
     private fun bindUI() = launch{
         val currentRecipe = viewModel.recipe.await()
 
-        currentRecipe.observe(viewLifecycleOwner, Observer {
-            if (it == null) return@Observer
-            val recipe = Recipe(it.hits[0].recipe.label, it.hits[0].recipe.image)
+        currentRecipe.observe(viewLifecycleOwner, Observer { recipeResponse ->
+            if (recipeResponse == null) return@Observer
             recipesList.clear()
-            recipesList.add(recipe)
+            recipeResponse.hits.forEach {
+                val recipe = Recipe(it.recipe.cuisineType,it.recipe.image, it.recipe.ingredientLines,it.recipe.label )
+                recipesList.add(recipe)
+            }
             recyclerview.adapter?.notifyDataSetChanged()
         })
     }
 
-    private fun addRecipeItemToList() {
-        if (recipesList.isEmpty())
-            recipesList.addAll(StaticRecipeList.predefinedRecipeList)
-    }
-
-    private fun fetchData() {
-        val apiService = RecipeApiService(ConnectivityInterceptorImpl(this.requireContext()))
-        val recipeNetworkDataSource = RecipeNetworkDataSourceImpl(apiService)
-
-        recipeNetworkDataSource.downloadedCurrentRecipe.observe(viewLifecycleOwner, Observer {
-            Log.d("jen", it.hits[0].recipe.label)
-            Log.d("jen", it.hits[0].recipe.image)
-        })
-
-        GlobalScope.launch(Dispatchers.Main) {
-            recipeNetworkDataSource.fetchCurrentRecipe("Carrot", 2)
-        }
-    }
+//    private fun fetchData() {
+//        val apiService = RecipeApiService(ConnectivityInterceptorImpl(this.requireContext()))
+//        val recipeNetworkDataSource = RecipeNetworkDataSourceImpl(apiService)
+//
+//        recipeNetworkDataSource.downloadedCurrentRecipe.observe(viewLifecycleOwner, Observer { recipeResponse ->
+//            recipeResponse.hits.forEach {
+//                val recipe = Recipe(it.recipe.cuisineType,it.recipe.image, it.recipe.ingredientLines,it.recipe.label )
+//                recipesList.add(recipe)
+//                Log.d("jennifer", recipe.toString())
+//            }
+//        })
+//
+//
+//        GlobalScope.launch(Dispatchers.Main) {
+//            recipeNetworkDataSource.fetchCurrentRecipe("Carrot%2CEgg", 2)
+//        }
+//    }
 }

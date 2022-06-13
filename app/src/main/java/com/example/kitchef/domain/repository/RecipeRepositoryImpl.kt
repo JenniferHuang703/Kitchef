@@ -2,12 +2,17 @@ package com.example.kitchef.domain.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.kitchef.data.db.CurrentRecipeDao
+import com.example.kitchef.data.db.entity.recipeModel.Recipe
 import com.example.kitchef.data.network.recipe.RecipeNetworkDataSource
 import com.example.kitchef.data.network.recipe.RecipeResponse
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class RecipeRepositoryImpl(
+    private val currentRecipeDao: CurrentRecipeDao,
     private val recipeNetworkDataSource: RecipeNetworkDataSource
 ): RecipeRepository {
 
@@ -21,8 +26,8 @@ class RecipeRepositoryImpl(
         }
     }
 
-    override suspend fun fetchRecipe(ingredient: String) {
-        recipeNetworkDataSource.fetchCurrentRecipe(ingredient, 2)
+    override suspend fun fetchRecipe(ingredient: String, ingrNb: Int) {
+        recipeNetworkDataSource.fetchCurrentRecipe(ingredient, ingrNb)
     }
 
     override suspend fun getCurrentRecipe(): LiveData<out RecipeResponse> {
@@ -31,4 +36,15 @@ class RecipeRepositoryImpl(
         }
     }
 
+    override suspend fun persistFetchedCurrentRecipe(fetchedRecipe: Recipe) {
+        GlobalScope.launch(Dispatchers.IO) {
+            currentRecipeDao.upsert(fetchedRecipe)
+        }
+    }
+
+    override suspend fun getPersistedRecipe() : LiveData<Recipe> {
+        return withContext(Dispatchers.IO) {
+            return@withContext currentRecipeDao.getRecipe()
+        }
+    }
 }

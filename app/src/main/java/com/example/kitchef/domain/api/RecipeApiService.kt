@@ -41,7 +41,6 @@ interface RecipeApiService {
                     .newBuilder()
                     .url(url)
                     .build()
-
                 return@Interceptor chain.proceed(request)
             }
             val okHttpClient = OkHttpClient.Builder()

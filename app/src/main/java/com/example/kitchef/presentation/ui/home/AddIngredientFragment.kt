@@ -82,20 +82,6 @@ class AddIngredientFragment : ScopeFragment(), KodeinAware {
         })
     }
 
-//    private fun fetchData() {
-//        val apiService = IngredientApiService(ConnectivityInterceptorImpl(this.requireContext()))
-//        val ingredientNetworkDataSource = IngredientNetworkDataSourceImpl(apiService)
-//
-//        ingredientNetworkDataSource.downloadedCurrrentIngredient.observe(viewLifecycleOwner, Observer {
-//            Log.d("jen", it.parsed[0].food.label)
-//            Log.d("jen", it.parsed[0].food.image)
-//        })
-//
-//        GlobalScope.launch(Dispatchers.Main) {
-//            ingredientNetworkDataSource.fetchCurrentIngredient("Carrot", "cooking")
-//        }
-//    }
-
     private fun updateObserver() = launch {
         viewModel.tempIngredientsList.observe(viewLifecycleOwner, Observer { ingList ->
             if (ingList == null) return@Observer
@@ -153,4 +139,18 @@ class AddIngredientFragment : ScopeFragment(), KodeinAware {
         super.onDestroyView()
         _binding = null
     }
+
+//    private fun fetchData() {
+//        val apiService = IngredientApiService(ConnectivityInterceptorImpl(this.requireContext()))
+//        val ingredientNetworkDataSource = IngredientNetworkDataSourceImpl(apiService)
+//
+//        ingredientNetworkDataSource.downloadedCurrrentIngredient.observe(viewLifecycleOwner, Observer {
+//            Log.d("jen", it.parsed[0].food.label)
+//            Log.d("jen", it.parsed[0].food.image)
+//        })
+//
+//        GlobalScope.launch(Dispatchers.Main) {
+//            ingredientNetworkDataSource.fetchCurrentIngredient("Carrot", "cooking")
+//        }
+//    }
 }

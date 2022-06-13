@@ -29,12 +29,12 @@ class AddIngredientsViewModel(
 
     fun searchIngredientOnQueryTextSubmit(query: String?, ingredientsList: ArrayList<Ingredient>) = viewModelScope.launch {
         val containText = ingredientsList.filter { it.title.lowercase() == query }
-        if (containText.isNotEmpty()) {
-            tempList.add(containText[0])
-            _tempIngredientList.value = tempList
-        } else {
+//        if (containText.isNotEmpty()) {
+//            tempList.add(containText[0])
+//            _tempIngredientList.value = tempList
+//        } else {
             ingredientRepository.fetchIngredient(query ?: "broccoli")
-        }
+//        }
     }
 
     fun searchIngredientOnQueryTextChange(newText: String?, ingredientsList: ArrayList<Ingredient>) {

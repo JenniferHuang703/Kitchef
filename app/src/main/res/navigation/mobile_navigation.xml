@@ -30,11 +30,19 @@
         android:id="@+id/nav_favorite"
         android:name="com.example.kitchef.presentation.ui.favorite.FavoriteFragment"
         android:label="@string/menu_favorite"
-        tools:layout="@layout/fragment_favorite" />
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_nav_favorite_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" >
+            <argument
+                android:name="recipeDetail"
+                app:argType="com.example.kitchef.data.db.entity.recipeModel.Recipe" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/addedIngredientsFragment"
         android:name="com.example.kitchef.presentation.ui.addedIngredients.AddedIngredientsFragment"
-        android:label="fragment_added_ingredients"
+        android:label="@string/ingredient_list"
         tools:layout="@layout/fragment_added_ingredients">
         <argument
             android:name="addedIngredientList"
@@ -44,24 +52,32 @@
             app:destination="@id/recommendedRecipesFragment">
             <argument
                 android:name="ingredientList"
-                app:argType="com.example.kitchef.domain.model.Ingredient[]" />
+                app:argType="string[]" />
         </action>
     </fragment>
     <fragment
         android:id="@+id/recommendedRecipesFragment"
         android:name="com.example.kitchef.presentation.ui.recommendedRecipes.RecommendedRecipesFragment"
-        android:label="fragment_recommended_recipes"
+        android:label="@string/recommended_recipe"
         tools:layout="@layout/fragment_recommended_recipes" >
         <argument
             android:name="ingredientList"
-            app:argType="com.example.kitchef.domain.model.Ingredient[]" />
+            app:argType="string[]" />
         <action
             android:id="@+id/action_recommendedRecipesFragment_to_recipeDetailFragment"
-            app:destination="@id/recipeDetailFragment" />
+            app:destination="@id/recipeDetailFragment">
+            <argument
+                android:name="recipeDetail"
+                app:argType="com.example.kitchef.data.db.entity.recipeModel.Recipe" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/recipeDetailFragment"
         android:name="com.example.kitchef.presentation.ui.recipeDetail.RecipeDetailFragment"
-        android:label="fragment_recipe_detail"
-        tools:layout="@layout/fragment_recipe_detail" />
+        android:label="@string/recipe_detail"
+        tools:layout="@layout/fragment_recipe_detail" >
+        <argument
+            android:name="recipeDetail"
+            app:argType="com.example.kitchef.data.db.entity.recipeModel.Recipe" />
+    </fragment>
 </navigation>

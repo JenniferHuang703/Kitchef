@@ -9,6 +9,9 @@
     <string name="menu_home">Home</string>
     <string name="menu_favorite">Favorite</string>
     <string name="menu_setting">Setting</string>
+    <string name="ingredient_list">Ingredient List</string>
+    <string name="recommended_recipe">Recommended Recipes</string>
+    <string name="recipe_detail">Recipe</string>
     <string name="search">Enter ingredients</string>
     <string name="add_ingredients_message">Add your ingredients to find out more recipes</string>
     <string name="view_ingredients_list">View ingredients list</string>
