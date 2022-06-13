@@ -1,6 +1,7 @@
 package com.example.kitchef
 
 import android.app.Application
+import com.example.kitchef.data.db.RecipeDatabase
 import com.example.kitchef.data.db.IngredientDatabase
 import com.example.kitchef.data.network.ConnectivityInterceptor
 import com.example.kitchef.data.network.ConnectivityInterceptorImpl
@@ -15,6 +16,7 @@ import com.example.kitchef.domain.repository.AddIngredientRepositoryImpl
 import com.example.kitchef.domain.repository.RecipeRepository
 import com.example.kitchef.domain.repository.RecipeRepositoryImpl
 import com.example.kitchef.presentation.ui.home.AddIngredientViewModelFactory
+import com.example.kitchef.presentation.ui.recipeDetail.RecipeDetailViewModelFactory
 import com.example.kitchef.presentation.ui.recommendedRecipes.RecommendedRecipesViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -31,16 +33,18 @@ class BaseApplication : Application(), KodeinAware {
 
         bind() from singleton { IngredientDatabase(instance()) }
         bind() from singleton { instance<IngredientDatabase>().currentIngredientDao() }
+        bind() from singleton { RecipeDatabase(instance()) }
+        bind() from singleton { instance<RecipeDatabase>().currentRecipeDao() }
         bind<ConnectivityInterceptor>() with singleton{ ConnectivityInterceptorImpl(instance())}
         bind() from singleton { IngredientApiService(instance()) }
         bind<IngredientNetworkDataSource>() with singleton { IngredientNetworkDataSourceImpl(instance()) }
         bind<AddIngredientRepository>() with singleton { AddIngredientRepositoryImpl(instance()) }
         bind() from provider { AddIngredientViewModelFactory(instance())}
         bind() from provider { RecommendedRecipesViewModelFactory(instance())}
-
+        bind() from provider { RecipeDetailViewModelFactory(instance())}
         bind() from singleton { RecipeApiService(instance()) }
         bind<RecipeNetworkDataSource>() with singleton { RecipeNetworkDataSourceImpl(instance()) }
-        bind<RecipeRepository>() with singleton { RecipeRepositoryImpl(instance()) }
+        bind<RecipeRepository>() with singleton { RecipeRepositoryImpl(instance(), instance()) }
 
         import(viewModelModule)
     }

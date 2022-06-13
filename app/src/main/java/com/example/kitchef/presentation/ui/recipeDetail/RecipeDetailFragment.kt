@@ -2,7 +2,6 @@ package com.example.kitchef.presentation.ui.recipeDetail
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +9,25 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.kitchef.R
+import com.example.kitchef.domain.model.Ingredient
+import com.example.kitchef.presentation.ui.base.ScopeFragment
+import com.example.kitchef.presentation.ui.recommendedRecipes.RecommendedRecipesViewModel
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.launch
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.closestKodein
+import org.kodein.di.generic.instance
 
-class RecipeDetailFragment : Fragment() {
+class RecipeDetailFragment : ScopeFragment(), KodeinAware {
 
+    override val kodein by closestKodein()
+    private val viewModelFactory: RecipeDetailViewModelFactory by instance()
+    private lateinit var viewModel: RecipeDetailViewModel
     private val args by navArgs<RecipeDetailFragmentArgs>()
     private var addToFavoriteBtnIsClicked = false
 
@@ -24,6 +36,13 @@ class RecipeDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_recipe_detail, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(RecipeDetailViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,12 +74,14 @@ class RecipeDetailFragment : Fragment() {
 
         addToFavoriteBtn.setOnClickListener {
             addToFavoriteBtnIsClicked = !addToFavoriteBtnIsClicked
-            if(addToFavoriteBtnIsClicked)
+            if(addToFavoriteBtnIsClicked) {
                 addToFavoriteBtn.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_favorite_full, null))
-            else
+                viewModel.persistRecipe(recipe)
+            }
+            else {
                 addToFavoriteBtn.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_favorite_empty, null))
+            }
         }
-
     }
 
 }

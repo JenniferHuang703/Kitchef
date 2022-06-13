@@ -30,7 +30,15 @@
         android:id="@+id/nav_favorite"
         android:name="com.example.kitchef.presentation.ui.favorite.FavoriteFragment"
         android:label="@string/menu_favorite"
-        tools:layout="@layout/fragment_favorite" />
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_nav_favorite_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" >
+            <argument
+                android:name="recipeDetail"
+                app:argType="com.example.kitchef.data.db.entity.recipeModel.Recipe" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/addedIngredientsFragment"
         android:name="com.example.kitchef.presentation.ui.addedIngredients.AddedIngredientsFragment"
