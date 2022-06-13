@@ -69,7 +69,6 @@ class RecipeDetailFragment : ScopeFragment(), KodeinAware {
                 str = "$str \n"
             str += it
         }
-        Log.d("jen",str)
         ingredientList.text = str
 
         addToFavoriteBtn.setOnClickListener {
