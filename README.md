@@ -13,6 +13,9 @@ then add the ingredient to the ingredient list.
 
 * Allowing user to save the recipe to favorite.
 
+# Screenshots
+![Screen Shot 2022-10-09 at 4 28 17 PM](https://user-images.githubusercontent.com/73407491/194778094-60d5b214-da56-428e-9ee2-d9dd7d45cb4c.png)
+
 # Technology 
 Kotlin,
 Edamam Recipe Search API
