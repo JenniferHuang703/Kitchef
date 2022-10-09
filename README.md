@@ -13,5 +13,5 @@ A list of recommended recipes with added ingredient.
 Allowing the user to save the recipe to favorite.
 
 # Technology 
-Kotlin
-Edamam Recipe Serach API
+Kotlin,
+Edamam Recipe Search API
