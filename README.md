@@ -14,7 +14,7 @@ then add the ingredient to the ingredient list.
 * Allowing user to save the recipe to favorite.
 
 # Screenshots
-![Screen Shot 2022-10-09 at 4 28 17 PM](https://user-images.githubusercontent.com/73407491/194778094-60d5b214-da56-428e-9ee2-d9dd7d45cb4c.png)
+![Screen Shot 2022-10-20 at 2 39 32 PM](https://user-images.githubusercontent.com/73407491/197031118-4e50244d-3501-4506-9528-f366adce9716.png)
 
 # Technology 
 Kotlin,
