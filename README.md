@@ -17,5 +17,6 @@ then add the ingredient to the ingredient list.
 ![Screen Shot 2022-10-20 at 2 39 32 PM](https://user-images.githubusercontent.com/73407491/197031118-4e50244d-3501-4506-9528-f366adce9716.png)
 
 # Technology 
-Kotlin,Android Room Database, 
-Edamam Recipe Search API
+* Kotlin
+* Android Room Database
+* Edamam Recipe Search API
