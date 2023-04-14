@@ -5,6 +5,7 @@ import android.view.*
 import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -44,15 +45,20 @@ class AddIngredientFragment : ScopeFragment(), KodeinAware {
     ): View {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
             .get(AddIngredientsViewModel::class.java)
+
+        val list = viewModel.getModifiedIngredientList()
+        if (list.isNotEmpty() && list != addedIngredientList) {
+            addedIngredientList.clear()
+            addedIngredientList.addAll(list)
+        }
 
         updateObserver()
         bindUI()

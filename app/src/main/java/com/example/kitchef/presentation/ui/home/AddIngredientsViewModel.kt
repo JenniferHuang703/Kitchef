@@ -18,6 +18,7 @@ class AddIngredientsViewModel(
     val tempIngredientsList: LiveData<ArrayList<Ingredient>> = _tempIngredientList
     private val _modifiedIngredientList = MutableLiveData<ArrayList<Ingredient>>()
     val modifiedIngredientList: LiveData<ArrayList<Ingredient>> = _modifiedIngredientList
+    private var ingList = ArrayList<Ingredient>()
 
     val ingredient by lazyDeferred {
         ingredientRepository.getCurrentIngredient()
@@ -55,6 +56,11 @@ class AddIngredientsViewModel(
     }
 
     fun modifyIngredientList(ingredientList: ArrayList<Ingredient>) {
-        _modifiedIngredientList.value = ingredientList
+//        _modifiedIngredientList.value = ingredientList
+        ingList.clear()
+        ingList.addAll(ingredientList)
     }
+
+    fun getModifiedIngredientList() = ingList
+
 }

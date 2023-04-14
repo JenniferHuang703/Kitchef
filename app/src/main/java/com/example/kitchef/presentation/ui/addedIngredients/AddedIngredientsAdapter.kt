@@ -13,21 +13,20 @@ import com.example.kitchef.domain.model.Ingredient
 
 class AddedIngredientsAdapter(private val ingredientList: List<Ingredient>): RecyclerView.Adapter<AddedIngredientsAdapter.ViewHolder>()  {
 
-    private lateinit var mListener: onItemClickListener
+    private lateinit var mListener: OnItemClickListener
     private lateinit var context: Context
 
-    interface onItemClickListener {
+    interface OnItemClickListener {
         fun onItemClick(position: Int)
     }
 
-    fun setOnClickListener(listen: onItemClickListener) {
+    fun setOnClickListener(listen: OnItemClickListener) {
         mListener = listen
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         val view = LayoutInflater.from(parent.context).inflate(R.layout.ingredient_remove_item, parent, false)
-        context = parent.getContext()
+        context = parent.context
         return ViewHolder(view, mListener)
     }
 
@@ -44,7 +43,7 @@ class AddedIngredientsAdapter(private val ingredientList: List<Ingredient>): Rec
         return ingredientList.size
     }
 
-    class ViewHolder(view: View, listener: onItemClickListener) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, listener: OnItemClickListener) : RecyclerView.ViewHolder(view) {
         val ingredientTitle: TextView = view.findViewById(R.id.ingredientTitle)
         val ingredientImage: ImageView = view.findViewById(R.id.ingredientImage)
 

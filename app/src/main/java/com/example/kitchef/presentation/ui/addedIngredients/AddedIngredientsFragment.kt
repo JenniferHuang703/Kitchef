@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -44,7 +45,7 @@ class AddedIngredientsFragment : Fragment(), KodeinAware {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
             .get(AddIngredientsViewModel::class.java)
 
     }
@@ -53,16 +54,17 @@ class AddedIngredientsFragment : Fragment(), KodeinAware {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
 
-        addedIngredientList.addAll(args.addedIngredientList)
+        if (addedIngredientList.isEmpty())
+            addedIngredientList.addAll(args.addedIngredientList)
 
         handleRecyclerView(view)
         onClickListeners(view)
     }
 
     private fun onClickListeners(view:View) {
-        var ingredientList = ArrayList<String>()
-        val proceedToRecipeBtn = view.findViewById<Button>(R.id.proceedToRecipeBtn)
-        proceedToRecipeBtn.setOnClickListener{
+        val ingredientList = ArrayList<String>()
+        val searchForRecipeBtn = view.findViewById<Button>(R.id.proceedToRecipeBtn)
+        searchForRecipeBtn.setOnClickListener{
             addedIngredientList.forEach {
                 ingredientList.add(it.title)
             }
@@ -80,7 +82,7 @@ class AddedIngredientsFragment : Fragment(), KodeinAware {
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = addedIngredientAdapter
 
-        addedIngredientAdapter.setOnClickListener(object : AddedIngredientsAdapter.onItemClickListener {
+        addedIngredientAdapter.setOnClickListener(object : AddedIngredientsAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 addedIngredientList.remove(addedIngredientList[position])
                 addedIngredientAdapter.notifyItemRemoved(position)

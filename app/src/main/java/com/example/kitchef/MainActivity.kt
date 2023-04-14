@@ -2,19 +2,12 @@ package com.example.kitchef
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
-import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.*
 import com.example.kitchef.common.StaticIngredientList
 import com.example.kitchef.databinding.ActivityMainBinding
 import com.example.kitchef.presentation.ui.home.AddIngredientViewModelFactory
@@ -32,7 +25,6 @@ class MainActivity : AppCompatActivity(), KodeinAware {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var searchView: SearchView
-//    private val addIngredientsViewModel by viewModel<AddIngredientsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,44 +33,34 @@ class MainActivity : AppCompatActivity(), KodeinAware {
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
-
-//        binding.appBarMain.fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
-
-        val drawerLayout: DrawerLayout = binding.drawerLayout
-        val navView: NavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_home, R.id.nav_setting, R.id.nav_favorite
-            ), drawerLayout
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
-        navView.itemIconTintList = null
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(AddIngredientsViewModel::class.java)
-
-        findNavController(R.id.nav_host_fragment_content_main).addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.nav_home -> {
-                    searchView = findViewById(R.id.searchView)
-                    searchView.visibility = View.VISIBLE
-                }
-                else -> {
-                    val searchBar = findViewById<SearchView>(R.id.searchView)
-                    searchBar.visibility = View.GONE
-                }
-            }
-        }
+        setUpBottomNavigation()
         handleSearching()
     }
 
+    private fun setUpBottomNavigation() {
+        val navFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
+        NavigationUI.setupWithNavController(binding.homeBottomNavbar, navFragment.navController)
+
+        navFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
+            when(destination.id) {
+                R.id.homeFragment -> {
+                    setBottomNavVisibility(View.VISIBLE)
+                    searchView = findViewById(R.id.searchView)
+                    searchView.visibility = View.VISIBLE
+                }
+                R.id.favoriteFragment -> setBottomNavVisibility(View.VISIBLE)
+                R.id.settingFragment -> setBottomNavVisibility(View.VISIBLE)
+                else -> {
+                    searchView.visibility = View.GONE
+                    setBottomNavVisibility(View.GONE)
+                }
+            }
+        }
+    }
+
+    private fun setBottomNavVisibility(visibility: Int) {
+        binding.homeBottomNavbar.visibility = visibility
+    }
 
     private fun handleSearching() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -93,26 +75,6 @@ class MainActivity : AppCompatActivity(), KodeinAware {
                 return true
             }
         })
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        when (item.itemId) {
-            R.id.home-> {
-                navController.navigate(R.id.nav_home)
-                return true
-            }
-            R.id.favorite ->{
-                navController.navigate(R.id.nav_favorite)
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onSupportNavigateUp(): Boolean {

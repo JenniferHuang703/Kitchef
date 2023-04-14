@@ -73,7 +73,7 @@ class FavoriteFragment : ScopeFragment(), KodeinAware {
 
         val searchBtn = view.findViewById<Button>(R.id.searchBtn)
         searchBtn.setOnClickListener {
-            navController?.navigate(R.id.nav_home)
+            navController?.navigate(R.id.homeFragment)
         }
     }
 
