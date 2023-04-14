@@ -19,9 +19,6 @@ import org.kodein.di.generic.instance
 class MainActivity : AppCompatActivity(), KodeinAware {
 
     override val kodein by closestKodein()
-    private val viewModelFactory: AddIngredientViewModelFactory by instance()
-    private lateinit var viewModel: AddIngredientsViewModel
-
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var searchView: SearchView
@@ -32,9 +29,8 @@ class MainActivity : AppCompatActivity(), KodeinAware {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.appBarMain.toolbar)
         setUpBottomNavigation()
-        handleSearching()
+//        handleSearching()
     }
 
     private fun setUpBottomNavigation() {
@@ -43,17 +39,10 @@ class MainActivity : AppCompatActivity(), KodeinAware {
 
         navFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id) {
-                R.id.homeFragment -> {
-                    setBottomNavVisibility(View.VISIBLE)
-                    searchView = findViewById(R.id.searchView)
-                    searchView.visibility = View.VISIBLE
-                }
+                R.id.homeFragment -> setBottomNavVisibility(View.VISIBLE)
                 R.id.favoriteFragment -> setBottomNavVisibility(View.VISIBLE)
                 R.id.settingFragment -> setBottomNavVisibility(View.VISIBLE)
-                else -> {
-                    searchView.visibility = View.GONE
-                    setBottomNavVisibility(View.GONE)
-                }
+                else -> setBottomNavVisibility(View.GONE)
             }
         }
     }
@@ -62,20 +51,20 @@ class MainActivity : AppCompatActivity(), KodeinAware {
         binding.homeBottomNavbar.visibility = visibility
     }
 
-    private fun handleSearching() {
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.searchIngredientOnQueryTextSubmit(query, StaticIngredientList.preDefinedIngredientsList)
-                return true
-            }
-
-            @SuppressLint("NotifyDataSetChanged")
-            override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.searchIngredientOnQueryTextChange(newText, StaticIngredientList.preDefinedIngredientsList)
-                return true
-            }
-        })
-    }
+//    private fun handleSearching() {
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                viewModel.searchIngredientOnQueryTextSubmit(query, StaticIngredientList.preDefinedIngredientsList)
+//                return true
+//            }
+//
+//            @SuppressLint("NotifyDataSetChanged")
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                viewModel.searchIngredientOnQueryTextChange(newText, StaticIngredientList.preDefinedIngredientsList)
+//                return true
+//            }
+//        })
+//    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)

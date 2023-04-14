@@ -28,12 +28,7 @@
             android:queryBackground="@android:color/transparent"
             android:iconifiedByDefault="false"
             android:searchIcon="@drawable/ic_search"
-            android:visibility="gone"
             tools:visibility="visible"/>
 
     </com.google.android.material.appbar.AppBarLayout>
-
-    <include layout="@layout/content_main" />
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
