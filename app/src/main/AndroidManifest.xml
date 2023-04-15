@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.kitchef">
+    package="com.app.kitchef">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name="com.example.kitchef.BaseApplication"
+        android:name="com.app.kitchef.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,11 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Kitchef">
         <activity
-            android:name="com.example.kitchef.MainActivity"
+            android:name="com.app.kitchef.MainActivity"
             android:theme="@style/Theme.Kitchef.NoActionBar"
             android:exported="true" />
         <activity
-            android:name="com.example.kitchef.SplashScreenActivity"
+            android:name="com.app.kitchef.SplashScreenActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.kitchef.presentation.ui.home.AddIngredientFragment"
+        android:name="com.app.kitchef.presentation.ui.home.AddIngredientFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -15,20 +15,20 @@
             app:destination="@id/addedIngredientsFragment" >
             <argument
                 android:name="addedIngredientList"
-                app:argType="com.example.kitchef.domain.model.Ingredient[]" />
+                app:argType="com.app.kitchef.domain.model.Ingredient[]" />
         </action>
 
     </fragment>
 
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.example.kitchef.presentation.ui.setting.SettingFragment"
+        android:name="com.app.kitchef.presentation.ui.setting.SettingFragment"
         android:label="@string/menu_setting"
         tools:layout="@layout/fragment_setting" />
 
     <fragment
         android:id="@+id/favoriteFragment"
-        android:name="com.example.kitchef.presentation.ui.favorite.FavoriteFragment"
+        android:name="com.app.kitchef.presentation.ui.favorite.FavoriteFragment"
         android:label="@string/menu_favorite"
         tools:layout="@layout/fragment_favorite" >
         <action
@@ -36,17 +36,17 @@
             app:destination="@id/recipeDetailFragment" >
             <argument
                 android:name="recipeDetail"
-                app:argType="com.example.kitchef.data.db.entity.recipeModel.Recipe" />
+                app:argType="com.app.kitchef.data.db.entity.recipeModel.Recipe" />
         </action>
     </fragment>
     <fragment
         android:id="@+id/addedIngredientsFragment"
-        android:name="com.example.kitchef.presentation.ui.addedIngredients.AddedIngredientsFragment"
+        android:name="com.app.kitchef.presentation.ui.addedIngredients.AddedIngredientsFragment"
         android:label="@string/ingredient_list"
         tools:layout="@layout/fragment_added_ingredients">
         <argument
             android:name="addedIngredientList"
-            app:argType="com.example.kitchef.domain.model.Ingredient[]" />
+            app:argType="com.app.kitchef.domain.model.Ingredient[]" />
         <action
             android:id="@+id/action_addedIngredientsFragment_to_recommendedRecipesFragment"
             app:destination="@id/recommendedRecipesFragment">
@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/recommendedRecipesFragment"
-        android:name="com.example.kitchef.presentation.ui.recommendedRecipes.RecommendedRecipesFragment"
+        android:name="com.app.kitchef.presentation.ui.recommendedRecipes.RecommendedRecipesFragment"
         android:label="@string/recommended_recipe"
         tools:layout="@layout/fragment_recommended_recipes" >
         <argument
@@ -68,16 +68,16 @@
             app:destination="@id/recipeDetailFragment">
             <argument
                 android:name="recipeDetail"
-                app:argType="com.example.kitchef.data.db.entity.recipeModel.Recipe" />
+                app:argType="com.app.kitchef.data.db.entity.recipeModel.Recipe" />
         </action>
     </fragment>
     <fragment
         android:id="@+id/recipeDetailFragment"
-        android:name="com.example.kitchef.presentation.ui.recipeDetail.RecipeDetailFragment"
+        android:name="com.app.kitchef.presentation.ui.recipeDetail.RecipeDetailFragment"
         android:label="@string/recipe_detail"
         tools:layout="@layout/fragment_recipe_detail" >
         <argument
             android:name="recipeDetail"
-            app:argType="com.example.kitchef.data.db.entity.recipeModel.Recipe" />
+            app:argType="com.app.kitchef.data.db.entity.recipeModel.Recipe" />
     </fragment>
 </navigation>
