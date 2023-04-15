@@ -17,7 +17,7 @@
     <string name="view_ingredients_list">View ingredients list</string>
     <string name="search_recipes">Search for recipes</string>
     <string name="add_ingredient">Add</string>
-    <string name="search_ingredient">Search</string>
+    <string name="search_ingredient">Search Ingredient</string>
     <string name="favorite_empty_state_message">Don\'t know what to eat? \n Click here to find out</string>
     <string name="ingredient_list_example">1 bag (1 pound) frozen broccoli, carrots and cauliflower \n ⅓ cup basil pesto \n 2 tablespoons grated Parmesan cheese</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
