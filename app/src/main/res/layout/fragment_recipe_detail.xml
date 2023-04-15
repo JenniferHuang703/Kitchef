@@ -4,17 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp"
     tools:context=".presentation.ui.recipeDetail.RecipeDetailFragment">
+
+    <include
+        android:id="@+id/top_app_bar"
+        layout="@layout/layout_top_bar" />
 
     <ImageView
         android:id="@+id/recipeImage"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:layout_marginTop="16dp"
         android:src="@drawable/broccoli_carrot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/top_app_bar" />
 
     <TextView
         android:id="@+id/recipeLabel"

@@ -6,6 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".presentation.ui.favorite.FavoriteFragment">
 
+    <include
+        android:id="@+id/top_app_bar"
+        layout="@layout/layout_top_bar" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="0dp"
@@ -13,7 +17,7 @@
         android:padding="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_app_bar"
         android:visibility="gone"
         tools:visibility="visible"/>
 
@@ -27,7 +31,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_app_bar"
         app:layout_constraintVertical_bias="0.2"
         android:visibility="visible"
         tools:visibility="visible"/>

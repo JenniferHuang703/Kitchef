@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/drawable/bg_gradient.xml" value="0.1405" />
         <entry key="app/src/main/res/drawable/border.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/empty_state_button.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_back_arrow.xml" value="0.119" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_favorite_empty.xml" value="0.2075" />
         <entry key="app/src/main/res/drawable/ic_favorite_full.xml" value="0.2075" />
@@ -33,9 +34,11 @@
         <entry key="app/src/main/res/layout/fragment_slideshow.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/layout/ingredient_item.xml" value="0.22627054850260417" />
         <entry key="app/src/main/res/layout/ingredient_remove_item.xml" value="0.1490036231884058" />
+        <entry key="app/src/main/res/layout/layout_top_bar.xml" value="0.13994565217391305" />
         <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/layout/recipe_card.xml" value="0.12968591691995948" />
         <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.17142857142857143" />
+        <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.27794871794871795" />
         <entry key="app/src/main/res/menu/main.xml" value="0.25" />
       </map>
     </option>

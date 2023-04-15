@@ -6,6 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".presentation.ui.setting.SettingFragment">
 
+    <include
+        android:id="@+id/top_app_bar"
+        layout="@layout/layout_top_bar" />
+
     <TextView
         android:id="@+id/text_gallery"
         android:layout_width="match_parent"
@@ -18,5 +22,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/top_app_bar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
