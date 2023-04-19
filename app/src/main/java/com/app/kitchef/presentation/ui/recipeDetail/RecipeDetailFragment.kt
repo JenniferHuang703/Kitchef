@@ -13,7 +13,6 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.app.kitchef.R
 import com.app.kitchef.presentation.ui.base.ScopeFragment
-import kotlinx.android.synthetic.main.fragment_home.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance

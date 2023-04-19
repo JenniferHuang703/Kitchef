@@ -16,14 +16,13 @@ import com.app.kitchef.common.StaticIngredientList
 import com.app.kitchef.databinding.FragmentHomeBinding
 import com.app.kitchef.domain.model.Ingredient
 import com.app.kitchef.presentation.ui.base.ScopeFragment
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 import kotlin.collections.ArrayList
 
-class AddIngredientFragment : ScopeFragment(), KodeinAware {
+class HomeFragment : ScopeFragment(), KodeinAware {
 
     override val kodein by closestKodein()
     private val viewModelFactory: AddIngredientViewModelFactory by instance()
@@ -42,7 +41,6 @@ class AddIngredientFragment : ScopeFragment(), KodeinAware {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -83,7 +81,7 @@ class AddIngredientFragment : ScopeFragment(), KodeinAware {
             val ing = Ingredient(it.parsed[0].food.image, it.parsed[0].food.label)
             displayedIngredientsList.clear()
             displayedIngredientsList.add(ing)
-            recyclerview.adapter?.notifyDataSetChanged()
+            binding.recyclerview.adapter?.notifyDataSetChanged()
         })
     }
 
@@ -92,7 +90,7 @@ class AddIngredientFragment : ScopeFragment(), KodeinAware {
             if (ingList == null) return@Observer
             displayedIngredientsList.clear()
             displayedIngredientsList.addAll(ingList)
-            recyclerview.adapter?.notifyDataSetChanged()
+            binding.recyclerview.adapter?.notifyDataSetChanged()
         })
 
         viewModel.modifiedIngredientList.observe(viewLifecycleOwner, Observer { newIngList ->
@@ -107,7 +105,7 @@ class AddIngredientFragment : ScopeFragment(), KodeinAware {
         val proceedToListBtn = view.findViewById<Button>(R.id.proceedToListBtn)
         proceedToListBtn.setOnClickListener {
             val directions =
-                AddIngredientFragmentDirections.actionNavHomeToAddedIngredientsFragment(
+                HomeFragmentDirections.actionNavHomeToAddedIngredientsFragment(
                     addedIngredientList.toTypedArray()
                 )
             findNavController().navigate(directions)

@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), KodeinAware {
     private fun setUpBottomNavigation() {
         val navFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
-        NavigationUI.setupWithNavController(binding.homeBottomNavbar, navFragment.navController)
+        NavigationUI.setupWithNavController(binding.homeBottomNavbar, navFragment.navController, false)
     }
 
     override fun onSupportNavigateUp(): Boolean {

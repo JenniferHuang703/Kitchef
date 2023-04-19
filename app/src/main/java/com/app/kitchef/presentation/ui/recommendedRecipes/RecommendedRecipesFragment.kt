@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.kitchef.R
 import com.app.kitchef.data.db.entity.recipeModel.Recipe
+import com.app.kitchef.databinding.FragmentRecommendedRecipesBinding
 import com.app.kitchef.presentation.ui.base.ScopeFragment
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
@@ -32,12 +32,14 @@ class RecommendedRecipesFragment : ScopeFragment(), KodeinAware {
     private var navController: NavController? = null
     private val args by navArgs<RecommendedRecipesFragmentArgs>()
     private var addedIngredientList = ""
-
+    private var _binding: FragmentRecommendedRecipesBinding? = null
+    private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_recommended_recipes, container, false)
+        _binding = FragmentRecommendedRecipesBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -101,7 +103,7 @@ class RecommendedRecipesFragment : ScopeFragment(), KodeinAware {
                 val recipe = Recipe(it.recipe.cuisineType,it.recipe.image, it.recipe.ingredientLines,it.recipe.label )
                 recipesList.add(recipe)
             }
-            recyclerview.adapter?.notifyDataSetChanged()
+            binding.recyclerview.adapter?.notifyDataSetChanged()
         })
     }
 
