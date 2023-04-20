@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -15,18 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.kitchef.R
 import com.app.kitchef.domain.model.Ingredient
-import com.app.kitchef.presentation.ui.home.AddIngredientViewModelFactory
 import com.app.kitchef.presentation.ui.home.AddIngredientsViewModel
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.closestKodein
-import org.kodein.di.generic.instance
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AddedIngredientsFragment : Fragment(), KodeinAware {
-
-    override val kodein by closestKodein()
-    private val viewModelFactory: AddIngredientViewModelFactory by instance()
-
-    private lateinit var viewModel: AddIngredientsViewModel
+class AddedIngredientsFragment : Fragment() {
+    private val viewModel by viewModel<AddIngredientsViewModel>()
 
     private var addedIngredientList = ArrayList<Ingredient>()
     private val args by navArgs<AddedIngredientsFragmentArgs>()
@@ -39,14 +31,6 @@ class AddedIngredientsFragment : Fragment(), KodeinAware {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_added_ingredients, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(AddIngredientsViewModel::class.java)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

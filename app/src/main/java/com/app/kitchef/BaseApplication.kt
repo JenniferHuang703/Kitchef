@@ -1,52 +1,28 @@
 package com.app.kitchef
 
 import android.app.Application
-import com.app.kitchef.data.db.RecipeDatabase
-import com.app.kitchef.data.db.IngredientDatabase
-import com.app.kitchef.data.network.ConnectivityInterceptor
-import com.app.kitchef.data.network.ConnectivityInterceptorImpl
-import com.app.kitchef.data.network.ingredient.IngredientNetworkDataSource
-import com.app.kitchef.data.network.ingredient.IngredientNetworkDataSourceImpl
-import com.app.kitchef.data.network.recipe.RecipeNetworkDataSource
-import com.app.kitchef.data.network.recipe.RecipeNetworkDataSourceImpl
-import com.app.kitchef.domain.api.IngredientApiService
-import com.app.kitchef.domain.api.RecipeApiService
-import com.app.kitchef.domain.repository.AddIngredientRepository
-import com.app.kitchef.domain.repository.AddIngredientRepositoryImpl
-import com.app.kitchef.domain.repository.RecipeRepository
-import com.app.kitchef.domain.repository.RecipeRepositoryImpl
-import com.app.kitchef.presentation.ui.home.AddIngredientViewModelFactory
-import com.app.kitchef.presentation.ui.recipeDetail.RecipeDetailViewModelFactory
-import com.app.kitchef.presentation.ui.recommendedRecipes.RecommendedRecipesViewModelFactory
-import org.kodein.di.Kodein
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.androidXModule
-import org.kodein.di.generic.bind
-import org.kodein.di.generic.instance
-import org.kodein.di.generic.provider
-import org.kodein.di.generic.singleton
-import viewModelModule
+import com.app.kitchef.data.di.databaseModule
+import com.app.kitchef.data.di.repositoryModule
+import com.app.kitchef.data.di.viewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.GlobalContext.startKoin
 
-class BaseApplication : Application(), KodeinAware {
-    override val kodein: Kodein = Kodein.lazy {
-        import(androidXModule(this@BaseApplication))
+class BaseApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
 
-        bind() from singleton { IngredientDatabase(instance()) }
-        bind() from singleton { instance<IngredientDatabase>().currentIngredientDao() }
-        bind() from singleton { RecipeDatabase(instance()) }
-        bind() from singleton { instance<RecipeDatabase>().currentRecipeDao() }
-        bind<ConnectivityInterceptor>() with singleton{ ConnectivityInterceptorImpl(instance())}
-        bind() from singleton { IngredientApiService(instance()) }
-        bind<IngredientNetworkDataSource>() with singleton { IngredientNetworkDataSourceImpl(instance()) }
-        bind<AddIngredientRepository>() with singleton { AddIngredientRepositoryImpl(instance()) }
-        bind() from provider { AddIngredientViewModelFactory(instance())}
-        bind() from provider { RecommendedRecipesViewModelFactory(instance())}
-        bind() from provider { RecipeDetailViewModelFactory(instance())}
-        bind() from singleton { RecipeApiService(instance()) }
-        bind<RecipeNetworkDataSource>() with singleton { RecipeNetworkDataSourceImpl(instance()) }
-        bind<RecipeRepository>() with singleton { RecipeRepositoryImpl(instance(), instance()) }
+        startKoin {
+            androidLogger()
+            androidContext(this@BaseApplication)
+            modules(
+                listOf(
+                    viewModelModule,
+                    databaseModule,
+                    repositoryModule
+                )
+            )
+        }
 
-        import(viewModelModule)
     }
-
 }

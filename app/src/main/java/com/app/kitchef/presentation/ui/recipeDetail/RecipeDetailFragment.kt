@@ -8,20 +8,15 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.app.kitchef.R
 import com.app.kitchef.presentation.ui.base.ScopeFragment
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.closestKodein
-import org.kodein.di.generic.instance
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class RecipeDetailFragment : ScopeFragment(), KodeinAware {
+class RecipeDetailFragment : ScopeFragment() {
 
-    override val kodein by closestKodein()
-    private val viewModelFactory: RecipeDetailViewModelFactory by instance()
-    private lateinit var viewModel: RecipeDetailViewModel
+    private val viewModel by viewModel<RecipeDetailViewModel>()
     private val args by navArgs<RecipeDetailFragmentArgs>()
     private var addToFavoriteBtnIsClicked = false
 
@@ -30,13 +25,6 @@ class RecipeDetailFragment : ScopeFragment(), KodeinAware {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_recipe_detail, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(RecipeDetailViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

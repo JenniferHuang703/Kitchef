@@ -1,9 +1,13 @@
-//package com.example.testing.data.di
-//
-//import com.example.testing.domain.repository.AddIngredientRepository
-//import com.example.testing.domain.repository.AddIngredientRepositoryImpl
-//import org.koin.dsl.module
-//
-//val repositoryModule = module {
-//    single{ AddIngredientRepositoryImpl(get()) }
-//}
+package com.app.kitchef.data.di
+
+import com.app.kitchef.domain.repository.AddIngredientRepository
+import com.app.kitchef.domain.repository.AddIngredientRepositoryImpl
+import com.app.kitchef.domain.repository.RecipeRepository
+import com.app.kitchef.domain.repository.RecipeRepositoryImpl
+import org.koin.dsl.module
+
+val repositoryModule = module {
+    single{ AddIngredientRepositoryImpl(get()) }
+    single<RecipeRepository> { RecipeRepositoryImpl(get(), get())}
+    single<AddIngredientRepository> { AddIngredientRepositoryImpl(get())}
+}

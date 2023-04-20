@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -17,15 +16,11 @@ import com.app.kitchef.data.db.entity.recipeModel.Recipe
 import com.app.kitchef.databinding.FragmentRecommendedRecipesBinding
 import com.app.kitchef.presentation.ui.base.ScopeFragment
 import kotlinx.coroutines.launch
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.closestKodein
-import org.kodein.di.generic.instance
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class RecommendedRecipesFragment : ScopeFragment(), KodeinAware {
+class RecommendedRecipesFragment : ScopeFragment() {
 
-    override val kodein by closestKodein()
-    private val viewModelFactory: RecommendedRecipesViewModelFactory by instance()
-    private lateinit var viewModel: RecommendedRecipesViewModel
+    private val viewModel by viewModel<RecommendedRecipesViewModel>()
     private lateinit var rv: RecyclerView
     private lateinit var recommendedRecipesAdapter: RecommendedRecipesAdapter
     private var recipesList = ArrayList<Recipe>()
@@ -44,9 +39,6 @@ class RecommendedRecipesFragment : ScopeFragment(), KodeinAware {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(RecommendedRecipesViewModel::class.java)
 
         var ingrNb = 2
         if (args.ingredientList.size != 1)

@@ -7,12 +7,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
 import com.app.kitchef.databinding.ActivityMainBinding
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.closestKodein
 
-class MainActivity : AppCompatActivity(), KodeinAware {
+class MainActivity : AppCompatActivity() {
 
-    override val kodein by closestKodein()
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 

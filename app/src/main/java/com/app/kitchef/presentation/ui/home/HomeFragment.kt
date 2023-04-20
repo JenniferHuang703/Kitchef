@@ -20,13 +20,12 @@ import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.collections.ArrayList
 
-class HomeFragment : ScopeFragment(), KodeinAware {
+class HomeFragment : ScopeFragment() {
 
-    override val kodein by closestKodein()
-    private val viewModelFactory: AddIngredientViewModelFactory by instance()
-    private lateinit var viewModel: AddIngredientsViewModel
+    private val viewModel by viewModel<AddIngredientsViewModel>()
     private var _binding: FragmentHomeBinding? = null
     private var navController: NavController? = null
     private lateinit var rv: RecyclerView
@@ -47,9 +46,6 @@ class HomeFragment : ScopeFragment(), KodeinAware {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(AddIngredientsViewModel::class.java)
 
         val list = viewModel.getModifiedIngredientList()
         if (list.isNotEmpty() && list != addedIngredientList) {

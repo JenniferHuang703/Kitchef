@@ -18,17 +18,12 @@ import com.app.kitchef.data.db.entity.recipeModel.Recipe
 import com.app.kitchef.databinding.FragmentFavoriteBinding
 import com.app.kitchef.presentation.ui.base.ScopeFragment
 import com.app.kitchef.presentation.ui.recipeDetail.RecipeDetailViewModel
-import com.app.kitchef.presentation.ui.recipeDetail.RecipeDetailViewModelFactory
 import kotlinx.coroutines.launch
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.closestKodein
-import org.kodein.di.generic.instance
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FavoriteFragment : ScopeFragment(), KodeinAware {
+class FavoriteFragment : ScopeFragment() {
 
-    override val kodein by closestKodein()
-    private val viewModelFactory: RecipeDetailViewModelFactory by instance()
-    private lateinit var viewModel: RecipeDetailViewModel
+    private val viewModel by viewModel<RecipeDetailViewModel>()
     private var _binding: FragmentFavoriteBinding? = null
     private lateinit var rv: RecyclerView
     private lateinit var emptyStateMessage: TextView
@@ -50,9 +45,6 @@ class FavoriteFragment : ScopeFragment(), KodeinAware {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(RecipeDetailViewModel::class.java)
 
         bindUI()
 //        handleRecyclerView()
