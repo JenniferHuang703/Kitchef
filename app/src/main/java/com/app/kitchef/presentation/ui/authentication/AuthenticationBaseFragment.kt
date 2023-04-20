@@ -5,20 +5,37 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.app.kitchef.R
+import androidx.fragment.app.activityViewModels
+import androidx.viewbinding.ViewBinding
 
-class AuthenticationBaseFragment : Fragment() {
+abstract class AuthenticationBaseFragment<VBinding: ViewBinding> : Fragment() {
+
+    protected val viewModel: AuthenticationViewModel by activityViewModels()
+
+    protected lateinit var binding: VBinding
+    protected abstract fun setViewBinding(): VBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        init()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_authentication_base, container, false)
+        setUpViews()
+        observeViews()
+        return binding.root
     }
 
+    open fun setUpViews() {}
+
+    open fun observeViews() {}
+
+    private fun init() {
+        binding = setViewBinding()
+    }
+
+    interface OnClickListener: View.OnClickListener
 }

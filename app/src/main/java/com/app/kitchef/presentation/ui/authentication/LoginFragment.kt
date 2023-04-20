@@ -1,18 +1,38 @@
 package com.app.kitchef.presentation.ui.authentication
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.app.kitchef.R
+import com.app.kitchef.databinding.FragmentLoginBinding
 
-class LoginFragment : Fragment() {
+class LoginFragment : AuthenticationBaseFragment<FragmentLoginBinding>() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_login, container, false)
+    override fun setViewBinding(): FragmentLoginBinding {
+        return FragmentLoginBinding.inflate(layoutInflater)
+    }
+
+    override fun observeViews() {
+        super.observeViews()
+
+        //TODO observe errors
+    }
+
+    override fun setUpViews() {
+        super.setUpViews()
+
+        binding.loginBtn.setOnClickListener(object : OnClickListener {
+            override fun onClick(view: View?) {
+                handleLogin()
+            }
+        })
+    }
+
+    private fun handleLogin() {
+        val email = binding.emailEditText.text.toString()
+        val password = binding.passwordEditText.text.toString()
+
+//        viewModel.login(email, password)
     }
 }

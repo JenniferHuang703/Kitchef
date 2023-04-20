@@ -1,6 +1,7 @@
 //package com.example.testing.data.di
 //
 import androidx.lifecycle.ViewModel
+import com.app.kitchef.presentation.ui.authentication.AuthenticationViewModel
 import com.app.kitchef.presentation.ui.home.AddIngredientsViewModel
 import com.app.kitchef.presentation.ui.recipeDetail.RecipeDetailViewModel
 import com.app.kitchef.presentation.ui.recommendedRecipes.RecommendedRecipesViewModel
@@ -17,6 +18,10 @@ import org.kodein.di.generic.provider
 ////}
 //
 val viewModelModule = Kodein.Module(name = "viewModelModule") {
+    bind<ViewModel>(tag = AuthenticationViewModel::class.java.simpleName) with provider {
+        AuthenticationViewModel(instance())
+    }
+
     bind<ViewModel>(tag = AddIngredientsViewModel::class.java.simpleName) with provider {
         AddIngredientsViewModel(instance())
     }
