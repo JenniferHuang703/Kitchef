@@ -16,7 +16,7 @@ class LaunchScreenActivity : AppCompatActivity() {
     }
 
     private fun startActivity() {
-        if (true) {
+        if (false) {
             val intent = Intent(this, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)

@@ -1,18 +1,35 @@
 package com.app.kitchef.presentation.ui.authentication
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import com.app.kitchef.R
+import androidx.navigation.fragment.findNavController
+import com.app.kitchef.databinding.FragmentSignUpBinding
 
-class SignUpFragment : Fragment() {
+class SignUpFragment :AuthenticationBaseFragment<FragmentSignUpBinding>() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_sign_up, container, false)
+    override fun setViewBinding(): FragmentSignUpBinding {
+        return FragmentSignUpBinding.inflate(layoutInflater)
+    }
+
+    override fun setUpViews() {
+        super.setUpViews()
+
+        binding.signUpBtn.setOnClickListener(object : OnClickListener {
+            override fun onClick(view: View?) {
+                handleSignUp()
+                launchMainActivity()
+            }
+        })
+    }
+
+    private fun handleSignUp() {
+        val email = binding.emailEditText.text.toString()
+        val password = binding.passwordEditText.text.toString()
+
+        viewModel.signUp(email, password)
+    }
+
+    private fun launchMainActivity(){
+        val directions = SignUpFragmentDirections.actionSignUpFragmentToMainActivity()
+        findNavController().navigate(directions)
     }
 }

@@ -5,12 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.viewbinding.ViewBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class AuthenticationBaseFragment<VBinding: ViewBinding> : Fragment() {
 
-    protected val viewModel: AuthenticationViewModel by activityViewModels()
+    protected val viewModel by viewModel<AuthenticationViewModel>()
 
     protected lateinit var binding: VBinding
     protected abstract fun setViewBinding(): VBinding

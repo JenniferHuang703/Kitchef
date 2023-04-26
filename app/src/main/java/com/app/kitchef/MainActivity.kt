@@ -1,6 +1,7 @@
 package com.app.kitchef
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.navigation.findNavController
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -23,13 +24,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpBottomNavigation() {
-        val navFragment =
+        val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
-        NavigationUI.setupWithNavController(binding.homeBottomNavbar, navFragment.navController, false)
+        val navController = navHostFragment.navController
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        NavigationUI.setupWithNavController(binding.homeBottomNavbar, navController, false)
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+
+        return findNavController(R.id.nav_host_fragment_content_main).navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }

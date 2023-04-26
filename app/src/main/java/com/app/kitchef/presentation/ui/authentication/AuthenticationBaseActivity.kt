@@ -8,5 +8,6 @@ class AuthenticationBaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication_base)
+        supportActionBar?.hide()
     }
 }
