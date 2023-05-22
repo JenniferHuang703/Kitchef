@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
-import com.app.kitchef.presentation.ui.authentication.AuthenticationBaseActivity
 
 
 class LaunchScreenActivity : AppCompatActivity() {
@@ -16,17 +15,11 @@ class LaunchScreenActivity : AppCompatActivity() {
     }
 
     private fun startActivity() {
-        if (false) {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            finish()
-        } else {
-            val intent = Intent(this, AuthenticationBaseActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
     }
 }

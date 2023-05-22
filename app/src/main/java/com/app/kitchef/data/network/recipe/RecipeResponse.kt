@@ -1,6 +1,5 @@
 package com.app.kitchef.data.network.recipe
 
-
 import com.app.kitchef.data.db.entity.recipeModel.Hit
 
 data class RecipeResponse(

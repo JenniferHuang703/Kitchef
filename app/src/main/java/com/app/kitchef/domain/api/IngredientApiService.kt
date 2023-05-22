@@ -2,7 +2,6 @@ package com.app.kitchef.domain.api
 
 import com.app.kitchef.data.network.ConnectivityInterceptor
 import com.app.kitchef.data.network.ingredient.IngredientResponse
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -14,6 +13,7 @@ import retrofit2.http.Query
 const val API_KEY_INGREDIENT = "1cb66901c1e9c7cba8c1e691ab70148e"
 const val APP_KEY_INGREDIENT = "4d13ceca"
 
+//base url: https://api.edamam.com/api/food-database/v2/
 //https://api.edamam.com/api/food-database/v2/parser?app_id=4d13ceca&app_key=1cb66901c1e9c7cba8c1e691ab70148e&ingr=broccoli&nutrition-type=cooking
 
 interface IngredientApiService {
@@ -50,11 +50,9 @@ interface IngredientApiService {
             return Retrofit.Builder()
                 .client(okHttpClient)
                 .baseUrl("https://api.edamam.com/api/food-database/v2/")
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(IngredientApiService::class.java)
         }
     }
-
 }

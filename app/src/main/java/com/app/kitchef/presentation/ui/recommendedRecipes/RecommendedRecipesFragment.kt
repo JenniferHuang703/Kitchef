@@ -4,16 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.app.kitchef.R
 import com.app.kitchef.data.db.entity.recipeModel.Recipe
 import com.app.kitchef.databinding.FragmentRecommendedRecipesBinding
+import com.app.kitchef.domain.utils.Resource
 import com.app.kitchef.presentation.ui.base.ScopeFragment
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,10 +30,11 @@ class RecommendedRecipesFragment : ScopeFragment() {
     private var addedIngredientList = ""
     private var _binding: FragmentRecommendedRecipesBinding? = null
     private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentRecommendedRecipesBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,16 +46,33 @@ class RecommendedRecipesFragment : ScopeFragment() {
         if (args.ingredientList.size != 1)
             ingrNb = args.ingredientList.size
 
-        viewModel.fetchRecipes(addedIngredientList, ingrNb)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.fetchRecipes(addedIngredientList, ingrNb).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                    }
 
-        bindUI()
+                    is Resource.Success -> {
+                        resource.data?.let{
+                            recipesList.addAll(it)
+                        }
+                        binding.recyclerview.adapter?.notifyDataSetChanged()
+                    }
+
+                    is Resource.Error -> {
+                        Toast.makeText(requireContext(), "${resource.message}", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         convertIngredientToURL(args.ingredientList)
-        handleRecyclerView(view)
+        handleRecyclerView()
     }
 
     private fun convertIngredientToURL(ingredientList: Array<String>) {
@@ -68,8 +87,8 @@ class RecommendedRecipesFragment : ScopeFragment() {
         addedIngredientList = ingr_str
     }
 
-    private fun handleRecyclerView(view: View) {
-        rv = view.findViewById(R.id.recyclerview)
+    private fun handleRecyclerView() {
+        rv = binding.recyclerview
         recommendedRecipesAdapter = RecommendedRecipesAdapter(recipesList)
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = recommendedRecipesAdapter
@@ -84,36 +103,4 @@ class RecommendedRecipesFragment : ScopeFragment() {
             }
         })
     }
-
-    private fun bindUI() = launch{
-        val currentRecipe = viewModel.recipe.await()
-
-        currentRecipe.observe(viewLifecycleOwner, Observer { recipeResponse ->
-            if (recipeResponse == null) return@Observer
-            recipesList.clear()
-            recipeResponse.hits.forEach {
-                val recipe = Recipe(it.recipe.cuisineType,it.recipe.image, it.recipe.ingredientLines,it.recipe.label )
-                recipesList.add(recipe)
-            }
-            binding.recyclerview.adapter?.notifyDataSetChanged()
-        })
-    }
-
-//    private fun fetchData() {
-//        val apiService = RecipeApiService(ConnectivityInterceptorImpl(this.requireContext()))
-//        val recipeNetworkDataSource = RecipeNetworkDataSourceImpl(apiService)
-//
-//        recipeNetworkDataSource.downloadedCurrentRecipe.observe(viewLifecycleOwner, Observer { recipeResponse ->
-//            recipeResponse.hits.forEach {
-//                val recipe = Recipe(it.recipe.cuisineType,it.recipe.image, it.recipe.ingredientLines,it.recipe.label )
-//                recipesList.add(recipe)
-//                Log.d("jennifer", recipe.toString())
-//            }
-//        })
-//
-//
-//        GlobalScope.launch(Dispatchers.Main) {
-//            recipeNetworkDataSource.fetchCurrentRecipe("Carrot%2CEgg", 2)
-//        }
-//    }
 }

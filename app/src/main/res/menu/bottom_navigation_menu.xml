@@ -8,6 +8,10 @@
             android:icon="@drawable/ic_home"
             android:title="@string/menu_home" />
         <item
+            android:id="@+id/recipeBookFragment"
+            android:icon="@drawable/ic_recipe_book"
+            android:title="@string/menu_recipe" />
+        <item
             android:id="@+id/favoriteFragment"
             android:icon="@drawable/ic_favorite"
             android:title="@string/menu_favorite" />

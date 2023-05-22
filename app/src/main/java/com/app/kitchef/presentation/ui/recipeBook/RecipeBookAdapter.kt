@@ -1,4 +1,4 @@
-package com.app.kitchef.presentation.ui.recommendedRecipes
+package com.app.kitchef.presentation.ui.recipeBook
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.app.kitchef.R
+import com.app.kitchef.domain.model.Recipe
+import com.bumptech.glide.Glide
 
-class RecommendedRecipesAdapter(private val recipesList: List<com.app.kitchef.data.db.entity.recipeModel.Recipe>): RecyclerView.Adapter<RecommendedRecipesAdapter.ViewHolder>() {
+class RecipeBookAdapter(private val recipesList: List<Recipe>): RecyclerView.Adapter<RecipeBookAdapter.ViewHolder>() {
 
     private lateinit var mListener: onItemClickListener
     private lateinit var context: Context
@@ -23,7 +24,10 @@ class RecommendedRecipesAdapter(private val recipesList: List<com.app.kitchef.da
         mListener = listen
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.recipe_card, parent, false)
         context = parent.context
         return ViewHolder(view, mListener)

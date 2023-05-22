@@ -9,6 +9,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_favorite">Favorite</string>
     <string name="menu_setting">Setting</string>
+    <string name="menu_recipe">Recipe</string>
     <string name="ingredient_list">Ingredient List</string>
     <string name="recommended_recipe">Recommended Recipes</string>
     <string name="recipe_detail">Recipe</string>

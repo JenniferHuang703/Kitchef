@@ -21,5 +21,5 @@ val databaseModule = module {
     single<IngredientNetworkDataSource> { IngredientNetworkDataSourceImpl(get()) }
     single { IngredientApiService(get()) }
     single { RecipeApiService(get()) }
-    single<RecipeNetworkDataSource> {RecipeNetworkDataSourceImpl(get())}
+    single<RecipeNetworkDataSource> {RecipeNetworkDataSourceImpl(get(), get())}
 }

@@ -1,29 +1,51 @@
 package com.app.kitchef.data.network.recipe
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.app.kitchef.data.db.entity.recipeModel.Hit
+import com.app.kitchef.data.db.entity.spoonacularModel.GetRandomRecipesInformationResponse
+import com.app.kitchef.data.network.ApiResponse
 import com.app.kitchef.domain.api.RecipeApiService
-import com.app.kitchef.internal.NoConnectivityException
+import com.app.kitchef.domain.api.SpoonacularApiService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import java.lang.Exception
 
 class RecipeNetworkDataSourceImpl(
-    private val recipeApiService: RecipeApiService
+    private val recipeApiService: RecipeApiService,
+    private val spoonacularApiService: SpoonacularApiService
 ) : RecipeNetworkDataSource {
 
-    private val _downloadedCurrentRecipe = MutableLiveData<RecipeResponse>()
-    override val downloadedCurrentRecipe: LiveData<RecipeResponse>
-        get() = _downloadedCurrentRecipe
-
-    override suspend fun fetchCurrentRecipe(ingredient: String, ingrNumber: Int) {
-        try {
-            val fetchCurrentIngredient = recipeApiService
-                .getRecipe(ingredient, ingrNumber)
-                .await()
-            _downloadedCurrentRecipe.postValue(fetchCurrentIngredient)
-        }
-        catch (e: NoConnectivityException) {
-            Log.e("Connectivity", "No internet connection", e)
-        }
+    override suspend fun  fetchCurrentRecipe(ingredient: String, ingrNumber: Int): Flow<ApiResponse<List<Hit>>> {
+        return flow {
+            try {
+                val response = recipeApiService.getRecipe(ingredient, ingrNumber)
+                val recipes = response.hits
+                if(recipes.isNotEmpty()) {
+                    emit(ApiResponse.Success(recipes))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            }
+            catch (exception: Exception) {
+                emit(ApiResponse.Error("get random recipes went wrong: $exception"))
+            }
+        }.flowOn(Dispatchers.IO)
     }
 
+    override suspend fun getRandomRecipes(): Flow<ApiResponse<List<GetRandomRecipesInformationResponse>>> {
+        return flow {
+            try {
+                val response = spoonacularApiService.getRandomRecipes(15)
+                val recipes = response.recipes
+                if(recipes.isNotEmpty()) {
+                    emit(ApiResponse.Success(recipes))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (exception: Exception) {
+                emit(ApiResponse.Error("get random recipes went wrong: $exception"))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
 }

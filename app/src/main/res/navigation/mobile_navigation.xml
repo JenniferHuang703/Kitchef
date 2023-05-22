@@ -87,4 +87,16 @@
             android:name="recipeDetail"
             app:argType="com.app.kitchef.data.db.entity.recipeModel.Recipe" />
     </fragment>
+    <fragment
+        android:id="@+id/recipeBookFragment"
+        android:name="com.app.kitchef.presentation.ui.recipeBook.RecipeBookFragment"
+        android:label="fragment_recipe_book"
+        tools:layout="@layout/fragment_recipe_book" >
+        <action
+            android:id="@+id/action_recipeBookFragment_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
+        <argument
+            android:name="ingredientList"
+            app:argType="string[]" />
+    </fragment>
 </navigation>

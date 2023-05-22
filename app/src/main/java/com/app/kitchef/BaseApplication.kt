@@ -2,6 +2,7 @@ package com.app.kitchef
 
 import android.app.Application
 import com.app.kitchef.data.di.databaseModule
+import com.app.kitchef.data.di.networkModule
 import com.app.kitchef.data.di.repositoryModule
 import com.app.kitchef.data.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -19,7 +20,8 @@ class BaseApplication : Application() {
                 listOf(
                     viewModelModule,
                     databaseModule,
-                    repositoryModule
+                    networkModule,
+                    repositoryModule,
                 )
             )
         }
