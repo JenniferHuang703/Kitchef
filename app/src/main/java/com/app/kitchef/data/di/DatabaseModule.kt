@@ -9,7 +9,6 @@ import com.app.kitchef.data.network.ingredient.IngredientNetworkDataSourceImpl
 import com.app.kitchef.data.network.recipe.RecipeNetworkDataSource
 import com.app.kitchef.data.network.recipe.RecipeNetworkDataSourceImpl
 import com.app.kitchef.domain.api.IngredientApiService
-import com.app.kitchef.domain.api.RecipeApiService
 import org.koin.dsl.module
 
 val databaseModule = module {
@@ -20,6 +19,5 @@ val databaseModule = module {
     single<ConnectivityInterceptor> { ConnectivityInterceptorImpl(get()) }
     single<IngredientNetworkDataSource> { IngredientNetworkDataSourceImpl(get()) }
     single { IngredientApiService(get()) }
-    single { RecipeApiService(get()) }
-    single<RecipeNetworkDataSource> {RecipeNetworkDataSourceImpl(get(), get())}
+    single<RecipeNetworkDataSource> {RecipeNetworkDataSourceImpl(get())}
 }

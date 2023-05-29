@@ -1,12 +1,10 @@
 package com.app.kitchef.data.di
 
 import com.app.kitchef.domain.api.SpoonacularApiService
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 const val SPOON_API_KEY_RECIPE = "92b5e93f470646178f054a3725cedc64"
@@ -31,11 +29,9 @@ val networkModule = module {
     }
 
     single {
-        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(GsonConverterFactory.create())
             .client(get())
             .build()
         retrofit.create(SpoonacularApiService::class.java)

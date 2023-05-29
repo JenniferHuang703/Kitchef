@@ -20,12 +20,12 @@ class RecipeRepositoryImpl(
     private val recipeNetworkDataSource: RecipeNetworkDataSource
 ): RecipeRepository {
 
-    override fun fetchRecipe(ingredient: String, ingrNb: Int): Flow<Resource<List<Recipe>>> = flow {
+    override fun getRandomRecipe(): Flow<Resource<List<com.app.kitchef.domain.model.Recipe>>> = flow {
         emit(Resource.Loading())
-        when (val apiResponse = recipeNetworkDataSource.fetchCurrentRecipe(ingredient, ingrNb).first()) {
+        when (val apiResponse = recipeNetworkDataSource.getRandomRecipes().first()) {
             is ApiResponse.Success -> {
                 val data = apiResponse.data
-                emit(Resource.Success(DataMapper.mapRecipeHitResponseToRecipe(data)))
+                emit(Resource.Success(DataMapper.mapRecipeResponseToRecipe(data)))
             }
             is ApiResponse.Empty -> {
                 emit(Resource.Success(listOf()))
@@ -36,12 +36,12 @@ class RecipeRepositoryImpl(
         }
     }
 
-    override fun getRandomRecipe(): Flow<Resource<List<com.app.kitchef.domain.model.Recipe>>> = flow {
+    override fun getRecipesByIngredients(ingredients: String): Flow<Resource<List<com.app.kitchef.domain.model.Recipe>>> = flow {
         emit(Resource.Loading())
-        when (val apiResponse = recipeNetworkDataSource.getRandomRecipes().first()) {
+        when (val apiResponse = recipeNetworkDataSource.getRecipesByIngredients(ingredients).first()) {
             is ApiResponse.Success -> {
                 val data = apiResponse.data
-                emit(Resource.Success(DataMapper.mapRecipeResponseToRecipe(data)))
+                emit(Resource.Success(DataMapper.mapRecipesByIngredientsResponseToRecipe(data)))
             }
             is ApiResponse.Empty -> {
                 emit(Resource.Success(listOf()))

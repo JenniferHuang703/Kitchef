@@ -43,21 +43,22 @@ class RecipeDetailFragment : ScopeFragment() {
             .into(recipeImage)
 
         recipeLabel.text = recipe.label
-        recipeCuisineType.text = recipe.cuisineType[0]
+//        recipeCuisineType.text = recipe.cuisineType[0]
+        recipeCuisineType.text = "Asian"
 
         var str = ""
-        recipe.ingredientLines.forEach {
-            if(it != recipe.ingredientLines.first())
-                str = "$str \n"
-            str += it
-        }
+//        recipe.ingredientLines.forEach {
+//            if(it != recipe.ingredientLines.first())
+//                str = "$str \n"
+//            str += it
+//        }
         ingredientList.text = str
 
         addToFavoriteBtn.setOnClickListener {
             addToFavoriteBtnIsClicked = !addToFavoriteBtnIsClicked
             if(addToFavoriteBtnIsClicked) {
                 addToFavoriteBtn.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_favorite_full, null))
-                viewModel.persistRecipe(recipe)
+//                viewModel.persistRecipe(recipe)
             }
             else {
                 addToFavoriteBtn.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_favorite_empty, null))

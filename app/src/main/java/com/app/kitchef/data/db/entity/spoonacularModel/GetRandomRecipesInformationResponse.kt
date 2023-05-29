@@ -1,17 +1,14 @@
 package com.app.kitchef.data.db.entity.spoonacularModel
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.math.BigDecimal
+import com.google.gson.annotations.SerializedName
 
-@JsonClass(generateAdapter = true)
 data class GetRandomRecipesInformationResponse (
 //    @Json(name = "id")
 //    val id: Int,
-    @Json(name = "title")
-    val title: String,
-    @Json(name = "image")
-    val image: String,
+    @SerializedName("title")
+    val title: String?,
+    @SerializedName("image")
+    val image: String?,
 //    @Json(name = "servings")
 //    val servings: BigDecimal,
 //    @Json(name = "readyInMinutes")

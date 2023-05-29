@@ -1,6 +1,7 @@
 package com.app.kitchef.domain.api
 
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRandomRecipesResponse
+import com.app.kitchef.data.db.entity.spoonacularModel.GetRecipesByIngredientsResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -20,7 +21,7 @@ interface SpoonacularApiService {
 
     @GET("findByIngredients")
     suspend fun getRecipesByIngredients(
-        @Query("ingredients") ingredients: Int,
-        @Query("number") numberOfResult: Int,
-    ): GetRandomRecipesResponse
+        @Query("ingredients") ingredients: String,
+        @Query("number") resultLimit: Int,
+    ): GetRecipesByIngredientsResponse
 }

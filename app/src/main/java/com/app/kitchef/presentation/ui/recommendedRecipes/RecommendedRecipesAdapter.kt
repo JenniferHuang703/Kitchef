@@ -9,8 +9,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.app.kitchef.R
+import com.app.kitchef.domain.model.Recipe
 
-class RecommendedRecipesAdapter(private val recipesList: List<com.app.kitchef.data.db.entity.recipeModel.Recipe>): RecyclerView.Adapter<RecommendedRecipesAdapter.ViewHolder>() {
+class RecommendedRecipesAdapter(private val recipesList: List<Recipe>): RecyclerView.Adapter<RecommendedRecipesAdapter.ViewHolder>() {
 
     private lateinit var mListener: onItemClickListener
     private lateinit var context: Context
