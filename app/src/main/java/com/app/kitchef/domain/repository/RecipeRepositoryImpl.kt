@@ -5,6 +5,7 @@ import com.app.kitchef.data.db.CurrentRecipeDao
 import com.app.kitchef.data.db.entity.recipeModel.Recipe
 import com.app.kitchef.data.network.ApiResponse
 import com.app.kitchef.data.network.recipe.RecipeNetworkDataSource
+import com.app.kitchef.domain.model.RecipeDetail
 import com.app.kitchef.domain.utils.DataMapper
 import com.app.kitchef.domain.utils.Resource
 import kotlinx.coroutines.Dispatchers
@@ -45,6 +46,22 @@ class RecipeRepositoryImpl(
             }
             is ApiResponse.Empty -> {
                 emit(Resource.Success(listOf()))
+            }
+            is ApiResponse.Error -> {
+                emit(Resource.Error(apiResponse.errorMessage))
+            }
+        }
+    }
+
+    override fun getRecipeDetail(recipeId: Int): Flow<Resource<RecipeDetail>> = flow {
+        emit(Resource.Loading())
+        when (val apiResponse = recipeNetworkDataSource.getRecipeDetail(recipeId).first()) {
+            is ApiResponse.Success -> {
+                val data = apiResponse.data
+                emit(Resource.Success(DataMapper.mapRecipeDetail(data)))
+            }
+            is ApiResponse.Empty -> {
+                emit(Resource.Error("Error"))
             }
             is ApiResponse.Error -> {
                 emit(Resource.Error(apiResponse.errorMessage))

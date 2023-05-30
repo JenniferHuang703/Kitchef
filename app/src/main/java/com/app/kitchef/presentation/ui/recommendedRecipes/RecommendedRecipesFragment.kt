@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.kitchef.databinding.FragmentRecommendedRecipesBinding
+import com.app.kitchef.domain.model.Recipe
 import com.app.kitchef.domain.utils.Resource
 import com.app.kitchef.presentation.ui.base.ScopeFragment
 import kotlinx.coroutines.launch
@@ -23,7 +24,7 @@ class RecommendedRecipesFragment : ScopeFragment() {
     private val viewModel by viewModel<RecommendedRecipesViewModel>()
     private lateinit var rv: RecyclerView
     private lateinit var recommendedRecipesAdapter: RecommendedRecipesAdapter
-    private var recipesList = ArrayList<com.app.kitchef.domain.model.Recipe>()
+    private var recipesList = ArrayList<Recipe>()
     private var navController: NavController? = null
     private val args by navArgs<RecommendedRecipesFragmentArgs>()
     private var addedIngredientList = ""
@@ -90,10 +91,9 @@ class RecommendedRecipesFragment : ScopeFragment() {
         recommendedRecipesAdapter.setOnClickListener(object :
             RecommendedRecipesAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
-//                val directions = RecommendedRecipesFragmentDirections.actionRecommendedRecipesFragmentToRecipeDetailFragment(
-//                    recipesList[position]
-//                )
-//                findNavController().navigate(directions)
+                val action = RecommendedRecipesFragmentDirections.actionRecommendedRecipesFragmentToRecipeDetailFragment()
+                action.recipeId = recipesList[position].recipeId
+                findNavController().navigate(action)
             }
         })
     }

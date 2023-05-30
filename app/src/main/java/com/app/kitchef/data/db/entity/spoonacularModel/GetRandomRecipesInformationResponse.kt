@@ -3,8 +3,8 @@ package com.app.kitchef.data.db.entity.spoonacularModel
 import com.google.gson.annotations.SerializedName
 
 data class GetRandomRecipesInformationResponse (
-//    @Json(name = "id")
-//    val id: Int,
+    @SerializedName("id")
+    val id: Int,
     @SerializedName("title")
     val title: String?,
     @SerializedName("image")

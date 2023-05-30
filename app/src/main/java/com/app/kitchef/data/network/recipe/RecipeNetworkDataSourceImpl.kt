@@ -1,6 +1,7 @@
 package com.app.kitchef.data.network.recipe
 
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRandomRecipesInformationResponse
+import com.app.kitchef.data.db.entity.spoonacularModel.GetRecipeDetailResponse
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRecipesByIngredientsResponseItem
 import com.app.kitchef.data.network.ApiResponse
 import com.app.kitchef.domain.api.SpoonacularApiService
@@ -19,7 +20,7 @@ class RecipeNetworkDataSourceImpl(
             try {
                 val response = spoonacularApiService.getRandomRecipes(15)
                 val recipes = response.recipes
-                if(recipes.isNotEmpty()) {
+                if (recipes.isNotEmpty()) {
                     emit(ApiResponse.Success(recipes))
                 } else {
                     emit(ApiResponse.Empty)
@@ -35,13 +36,24 @@ class RecipeNetworkDataSourceImpl(
             try {
                 val response = spoonacularApiService.getRecipesByIngredients(ingredients, 5)
                 val recipes = response.toList()
-                if(recipes.isNotEmpty()) {
+                if (recipes.isNotEmpty()) {
                     emit(ApiResponse.Success(recipes))
                 } else {
                     emit(ApiResponse.Empty)
                 }
             } catch (exception: Exception) {
                 emit(ApiResponse.Error("get recipes by ingredients went wrong: $exception"))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun getRecipeDetail(recipeId: Int): Flow<ApiResponse<GetRecipeDetailResponse>> {
+        return flow {
+            try {
+                val response = spoonacularApiService.getRecipeDetail(recipeId, false)
+                emit(ApiResponse.Success(response))
+            } catch (exception: Exception) {
+                emit(ApiResponse.Error("get recipe detail went wrong: $exception"))
             }
         }.flowOn(Dispatchers.IO)
     }

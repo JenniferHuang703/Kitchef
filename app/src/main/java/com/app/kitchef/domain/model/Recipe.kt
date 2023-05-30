@@ -1,19 +1,24 @@
 package com.app.kitchef.domain.model
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 const val CURRENT_RECIPE_ID = 0
 
 @Entity(tableName = "current_recipe")
 @Parcelize
 data class Recipe(
-   val label: String?,
-    val image: String?,
+    @ColumnInfo(name = "id")
+    val recipeId: Int,
+    @ColumnInfo(name = "label")
+    val label: String,
+    @ColumnInfo(name = "image")
+    val image: String,
 //   val cuisineType: List<String>
-): Parcelable {
+) : Parcelable {
     @PrimaryKey(autoGenerate = false)
-    var id = com.app.kitchef.data.db.entity.recipeModel.CURRENT_RECIPE_ID
+    var id = CURRENT_RECIPE_ID
 }

@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.app.kitchef.R
+import com.app.kitchef.databinding.FragmentRecipeDetailBinding
+import com.app.kitchef.domain.model.RecipeDetail
+import com.app.kitchef.domain.utils.Resource
 import com.app.kitchef.presentation.ui.base.ScopeFragment
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RecipeDetailFragment : ScopeFragment() {
@@ -19,51 +22,88 @@ class RecipeDetailFragment : ScopeFragment() {
     private val viewModel by viewModel<RecipeDetailViewModel>()
     private val args by navArgs<RecipeDetailFragmentArgs>()
     private var addToFavoriteBtnIsClicked = false
+    private var _binding: FragmentRecipeDetailBinding? = null
+    private val binding  get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_recipe_detail, container, false)
+    ): View {
+        _binding = FragmentRecipeDetailBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observers()
+    }
 
-        val recipe = args.recipeDetail
-        val recipeImage = view.findViewById<ImageView>(R.id.recipeImage)
-        val recipeLabel = view.findViewById<TextView>(R.id.recipeLabel)
-        val recipeCuisineType = view.findViewById<TextView>(R.id.recipeCuisineType)
-        val ingredientList = view.findViewById<TextView>(R.id.ingredientList)
-        val addToFavoriteBtn = view.findViewById<ImageButton>(R.id.addToFavoriteBtn)
+    private fun observers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getRecipeDetail(args.recipeId).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                    }
 
-        Glide.with(requireContext())
-            .load(recipe.image)
-            .centerCrop()
-            .into(recipeImage)
+                    is Resource.Success -> {
+                        resource.data?.let {
+                           setUpViews(it)
+                        }
+                    }
 
-        recipeLabel.text = recipe.label
-//        recipeCuisineType.text = recipe.cuisineType[0]
-        recipeCuisineType.text = "Asian"
-
-        var str = ""
-//        recipe.ingredientLines.forEach {
-//            if(it != recipe.ingredientLines.first())
-//                str = "$str \n"
-//            str += it
-//        }
-        ingredientList.text = str
-
-        addToFavoriteBtn.setOnClickListener {
-            addToFavoriteBtnIsClicked = !addToFavoriteBtnIsClicked
-            if(addToFavoriteBtnIsClicked) {
-                addToFavoriteBtn.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_favorite_full, null))
-//                viewModel.persistRecipe(recipe)
-            }
-            else {
-                addToFavoriteBtn.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_favorite_empty, null))
+                    is Resource.Error -> {
+                        Toast.makeText(requireContext(), "${resource.message}", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
             }
         }
     }
 
+    private fun setUpViews(recipe: RecipeDetail) {
+        val recipeImage = binding.recipeImage
+        val recipeLabel = binding.recipeLabel
+        val recipeCuisineType = binding.recipeCuisineType
+        val ingredientList = binding.ingredientList
+        val addToFavoriteBtn = binding.addToFavoriteBtn
+
+        Glide.with(requireContext())
+            .load(recipe.dishImageUrl)
+            .centerCrop()
+            .into(recipeImage)
+
+        recipeLabel.text = recipe.dishName
+//        recipeCuisineType.text = recipe.cuisineType[0]
+        recipeCuisineType.text = "Asian"
+
+        var str = ""
+        recipe.ingredients.forEach {
+            if(it != recipe.ingredients.first())
+                str = "$str \n"
+            str += it
+        }
+        ingredientList.text = str
+
+        addToFavoriteBtn.setOnClickListener {
+            addToFavoriteBtnIsClicked = !addToFavoriteBtnIsClicked
+            if (addToFavoriteBtnIsClicked) {
+                addToFavoriteBtn.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.ic_favorite_full,
+                        null
+                    )
+                )
+//                viewModel.persistRecipe(recipe)
+            } else {
+                addToFavoriteBtn.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.ic_favorite_empty,
+                        null
+                    )
+                )
+            }
+        }
+    }
 }

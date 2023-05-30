@@ -1,8 +1,10 @@
 package com.app.kitchef.domain.api
 
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRandomRecipesResponse
+import com.app.kitchef.data.db.entity.spoonacularModel.GetRecipeDetailResponse
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRecipesByIngredientsResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 //https://api.spoonacular.com/recipes/complexSearch
@@ -24,4 +26,11 @@ interface SpoonacularApiService {
         @Query("ingredients") ingredients: String,
         @Query("number") resultLimit: Int,
     ): GetRecipesByIngredientsResponse
+
+    @GET("{id}/information")
+    suspend fun getRecipeDetail(
+        @Path("id") id: Int,
+        @Query("includeNutrition") isIncludeNutrition: Boolean
+    ): GetRecipeDetailResponse
+
 }

@@ -2,7 +2,7 @@ package com.app.kitchef.data.db.entity.recipeModel
 
 import android.os.Parcelable
 import androidx.room.*
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 const val CURRENT_RECIPE_ID = 0
 
