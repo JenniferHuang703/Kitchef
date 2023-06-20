@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.app.kitchef.R
@@ -63,9 +65,11 @@ class RecipeDetailFragment : ScopeFragment() {
     private fun setUpViews(recipe: RecipeDetail) {
         val recipeImage = binding.recipeImage
         val recipeLabel = binding.recipeLabel
+        val cookingTime = binding.recipeDuration
         val recipeCuisineType = binding.recipeCuisineType
         val ingredientList = binding.ingredientList
         val addToFavoriteBtn = binding.addToFavoriteBtn
+        val instruction = binding.instruction
 
         Glide.with(requireContext())
             .load(recipe.dishImageUrl)
@@ -73,16 +77,19 @@ class RecipeDetailFragment : ScopeFragment() {
             .into(recipeImage)
 
         recipeLabel.text = recipe.dishName
+        cookingTime.text = recipe.cookingTime.toString() + "min"
 //        recipeCuisineType.text = recipe.cuisineType[0]
         recipeCuisineType.text = "Asian"
 
         var str = ""
-        recipe.ingredients.forEach {
-            if(it != recipe.ingredients.first())
-                str = "$str \n"
-            str += it
-        }
+//        recipe.ingredients.forEach {
+//            if(it != recipe.ingredients.first())
+//                str = "$str \n"
+//            str += it.name
+//        }
         ingredientList.text = str
+
+        instruction.text = recipe.shortInstruction
 
         addToFavoriteBtn.setOnClickListener {
             addToFavoriteBtnIsClicked = !addToFavoriteBtnIsClicked
@@ -104,6 +111,12 @@ class RecipeDetailFragment : ScopeFragment() {
                     )
                 )
             }
+        }
+
+        binding.topAppBar.toolbar.title = recipe.dishName
+
+        binding.topAppBar.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
         }
     }
 }

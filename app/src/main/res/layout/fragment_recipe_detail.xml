@@ -74,9 +74,9 @@
                 android:layout_margin="18dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:text="@string/cuisine_type"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recipeDuration"
-                tools:text="Cuisine Type" />
+                app:layout_constraintTop_toBottomOf="@+id/recipeDuration" />
 
             <TextView
                 android:id="@+id/recipeCuisineType"
@@ -94,18 +94,38 @@
                 android:layout_margin="18dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:text="@string/ingredients"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recipeCuisineType"
-                tools:text="Ingredients" />
+                app:layout_constraintTop_toBottomOf="@+id/recipeCuisineType" />
 
             <TextView
                 android:id="@+id/ingredientList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
-                android:text="@string/ingredient_list_example"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ingredientTitle"
+                tools:text="@string/ingredient_list_example" />
+
+            <TextView
+                android:id="@+id/instructionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="18dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="@string/instruction"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ingredientList" />
+
+
+            <TextView
+                android:id="@+id/instruction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/instructionTitle"
                 tools:text="@string/ingredient_list_example" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

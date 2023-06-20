@@ -7,15 +7,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.kitchef.R
-import com.app.kitchef.data.db.entity.recipeModel.Recipe
 import com.app.kitchef.databinding.FragmentFavoriteBinding
+import com.app.kitchef.domain.model.Recipe
 import com.app.kitchef.presentation.ui.base.ScopeFragment
 import com.app.kitchef.presentation.ui.recipeDetail.RecipeDetailViewModel
 import kotlinx.coroutines.launch
@@ -40,7 +39,8 @@ class FavoriteFragment : ScopeFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_favorite, container, false)
+        _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -54,11 +54,11 @@ class FavoriteFragment : ScopeFragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
 
-        rv = view.findViewById(R.id.recyclerview)
-        emptyStateMessage = view.findViewById(R.id.emptyStateMessage)
-        emptyStateBtn = view.findViewById(R.id.searchBtn)
+        rv = binding.recyclerview
+        emptyStateMessage = binding.emptyStateMessage
+        emptyStateBtn = binding.searchBtn
 
-        val searchBtn = view.findViewById<Button>(R.id.searchBtn)
+        val searchBtn = binding.searchBtn
         searchBtn.setOnClickListener {
             navController?.navigate(R.id.homeFragment)
         }
@@ -76,21 +76,20 @@ class FavoriteFragment : ScopeFragment() {
         favoriteAdapter.setOnClickListener(object :
             FavoriteAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
-                val directions = FavoriteFragmentDirections.actionNavFavoriteToRecipeDetailFragment(
-                    recipeList[position]
-                )
-                findNavController().navigate(directions)
+                val action = FavoriteFragmentDirections.actionNavFavoriteToRecipeDetailFragment()
+                action.recipeId = recipeList[position].recipeId
+                findNavController().navigate(action)
             }
         })
     }
 
     private fun bindUI() = launch{
-        recipeList = ArrayList<Recipe>()
+        recipeList = ArrayList()
         val persistedRecipe = viewModel.recipe.await()
 
         persistedRecipe.observe(viewLifecycleOwner, Observer {
             if (it == null) return@Observer
-            recipeList.add(it)
+//            recipeList.add(it)
             handleRecyclerView()
         })
     }

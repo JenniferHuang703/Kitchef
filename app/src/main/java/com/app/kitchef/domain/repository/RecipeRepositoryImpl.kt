@@ -2,9 +2,9 @@ package com.app.kitchef.domain.repository
 
 import androidx.lifecycle.LiveData
 import com.app.kitchef.data.db.CurrentRecipeDao
-import com.app.kitchef.data.db.entity.recipeModel.Recipe
 import com.app.kitchef.data.network.ApiResponse
 import com.app.kitchef.data.network.recipe.RecipeNetworkDataSource
+import com.app.kitchef.domain.model.Recipe
 import com.app.kitchef.domain.model.RecipeDetail
 import com.app.kitchef.domain.utils.DataMapper
 import com.app.kitchef.domain.utils.Resource
@@ -21,7 +21,7 @@ class RecipeRepositoryImpl(
     private val recipeNetworkDataSource: RecipeNetworkDataSource
 ): RecipeRepository {
 
-    override fun getRandomRecipe(): Flow<Resource<List<com.app.kitchef.domain.model.Recipe>>> = flow {
+    override fun getRandomRecipe(): Flow<Resource<List<Recipe>>> = flow {
         emit(Resource.Loading())
         when (val apiResponse = recipeNetworkDataSource.getRandomRecipes().first()) {
             is ApiResponse.Success -> {
@@ -37,7 +37,7 @@ class RecipeRepositoryImpl(
         }
     }
 
-    override fun getRecipesByIngredients(ingredients: String): Flow<Resource<List<com.app.kitchef.domain.model.Recipe>>> = flow {
+    override fun getRecipesByIngredients(ingredients: String): Flow<Resource<List<Recipe>>> = flow {
         emit(Resource.Loading())
         when (val apiResponse = recipeNetworkDataSource.getRecipesByIngredients(ingredients).first()) {
             is ApiResponse.Success -> {
@@ -69,13 +69,13 @@ class RecipeRepositoryImpl(
         }
     }
 
-    override suspend fun persistFetchedCurrentRecipe(fetchedRecipe: Recipe) {
+    override suspend fun persistFetchedCurrentRecipe(fetchedRecipe: RecipeDetail) {
         GlobalScope.launch(Dispatchers.IO) {
             currentRecipeDao.upsert(fetchedRecipe)
         }
     }
 
-    override suspend fun getPersistedRecipe() : LiveData<Recipe> {
+    override suspend fun getPersistedRecipe() : LiveData<RecipeDetail> {
         return withContext(Dispatchers.IO) {
             return@withContext currentRecipeDao.getRecipe()
         }

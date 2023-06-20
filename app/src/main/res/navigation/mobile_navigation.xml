@@ -38,9 +38,6 @@
         <action
             android:id="@+id/action_nav_favorite_to_recipeDetailFragment"
             app:destination="@id/recipeDetailFragment">
-            <argument
-                android:name="recipeDetail"
-                app:argType="com.app.kitchef.data.db.entity.recipeModel.Recipe" />
         </action>
         <action
             android:id="@+id/action_favoriteFragment_to_homeFragment"

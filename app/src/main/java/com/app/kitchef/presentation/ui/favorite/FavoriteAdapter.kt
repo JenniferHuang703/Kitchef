@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.app.kitchef.R
-import com.app.kitchef.data.db.entity.recipeModel.Recipe
+import com.app.kitchef.domain.model.Recipe
 
 class FavoriteAdapter(private val recipesList: List<Recipe>): RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
 

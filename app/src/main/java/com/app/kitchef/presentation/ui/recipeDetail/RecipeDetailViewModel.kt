@@ -2,7 +2,7 @@ package com.app.kitchef.presentation.ui.recipeDetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.kitchef.data.db.entity.recipeModel.Recipe
+import com.app.kitchef.domain.model.Recipe
 import com.app.kitchef.domain.model.RecipeDetail
 import com.app.kitchef.domain.repository.RecipeRepository
 import com.app.kitchef.domain.utils.Resource
@@ -25,7 +25,7 @@ class RecipeDetailViewModel(
         }
     }
 
-    fun persistRecipe(recipe: Recipe) = viewModelScope.launch {
+    fun persistRecipe(recipe: RecipeDetail) = viewModelScope.launch {
         recipeRepository.persistFetchedCurrentRecipe(recipe)
     }
 }

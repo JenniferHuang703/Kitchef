@@ -74,9 +74,9 @@ object DataMapper {
             input.dishId ?: -1,
             input.creditText ?: "Anonymous",
             input.instructions ?: "",
-            steps,
-            nutrientList,
-            ingredients,
+//            steps,
+//            nutrientList,
+//            ingredients,
             input.glutenFree ?: false,
             input.dairyFree ?: false,
             input.vegetarian ?: false

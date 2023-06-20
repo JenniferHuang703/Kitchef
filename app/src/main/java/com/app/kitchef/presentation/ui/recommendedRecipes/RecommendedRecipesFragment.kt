@@ -45,6 +45,7 @@ class RecommendedRecipesFragment : ScopeFragment() {
         convertIngredientToURL(args.ingredientList)
         observers()
         handleRecyclerView()
+        onClickListener()
     }
 
     private fun observers() {
@@ -96,5 +97,13 @@ class RecommendedRecipesFragment : ScopeFragment() {
                 findNavController().navigate(action)
             }
         })
+    }
+
+    private fun onClickListener() {
+        binding.topAppBar.toolbar.title = "Recommended Recipes"
+
+        binding.topAppBar.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 }

@@ -5,10 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.app.kitchef.data.db.entity.recipeModel.Recipe
+import com.app.kitchef.domain.model.RecipeDetail
 
 @Database(
-    entities = [Recipe::class],
+    entities = [RecipeDetail::class],
     version = 1
 )
 @TypeConverters(RoomTypeConverter::class)

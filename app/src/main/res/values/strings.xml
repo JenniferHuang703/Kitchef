@@ -14,6 +14,9 @@
     <string name="recommended_recipe">Recommended Recipes</string>
     <string name="recipe_detail">Recipe</string>
     <string name="search">Enter ingredients</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="instruction">Instruction</string>
+    <string name="cuisine_type">Cuisine Type</string>
     <string name="add_ingredients_message">Add your ingredients to find out more recipes</string>
     <string name="view_ingredients_list">View ingredients list</string>
     <string name="search_recipes">Search for recipes</string>

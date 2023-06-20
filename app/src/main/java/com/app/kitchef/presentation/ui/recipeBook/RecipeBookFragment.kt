@@ -12,12 +12,14 @@ import com.app.kitchef.databinding.FragmentRecipeBookBinding
 import com.app.kitchef.domain.utils.Resource
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.navigation.fragment.findNavController
+import com.app.kitchef.domain.model.Recipe
 
 class RecipeBookFragment : Fragment() {
 
     private val viewModel by viewModel<RecipeBookViewModel>()
     private var _binding: FragmentRecipeBookBinding? = null
-    private var recipesList = ArrayList<com.app.kitchef.domain.model.Recipe>()
+    private var recipesList = ArrayList<Recipe>()
     private val binding get() = _binding!!
     private lateinit var recipeBookAdapter: RecipeBookAdapter
 
@@ -66,10 +68,9 @@ class RecipeBookFragment : Fragment() {
         recipeBookAdapter.setOnClickListener(object :
             RecipeBookAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
-//                val directions = RecipeBookFragmentDirections.actionRecipeBookFragmentToRecipeDetailFragment(
-//                    recipesList[position]
-//                )
-//                findNavController().navigate(directions)
+                val action = RecipeBookFragmentDirections.actionRecipeBookFragmentToRecipeDetailFragment()
+                action.recipeId = recipesList[position].recipeId
+                findNavController().navigate(action)
             }
         })
     }
