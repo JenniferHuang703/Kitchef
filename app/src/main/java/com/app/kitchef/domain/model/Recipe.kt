@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
+const val CURRENT_RECIPE_ID = 0
 
 @Entity(tableName = "current_recipe")
 @Parcelize

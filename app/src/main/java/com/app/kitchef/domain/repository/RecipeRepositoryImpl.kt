@@ -1,25 +1,23 @@
 package com.app.kitchef.domain.repository
 
-import androidx.lifecycle.LiveData
 import com.app.kitchef.data.db.CurrentRecipeDao
+import com.app.kitchef.data.db.entity.recipeModel.FavoriteRecipeEntity
 import com.app.kitchef.data.network.ApiResponse
 import com.app.kitchef.data.network.recipe.RecipeNetworkDataSource
+import com.app.kitchef.domain.model.FavoriteRecipe
 import com.app.kitchef.domain.model.Recipe
 import com.app.kitchef.domain.model.RecipeDetail
 import com.app.kitchef.domain.utils.DataMapper
 import com.app.kitchef.domain.utils.Resource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.map
 
 class RecipeRepositoryImpl(
     private val currentRecipeDao: CurrentRecipeDao,
     private val recipeNetworkDataSource: RecipeNetworkDataSource
-): RecipeRepository {
+) : RecipeRepository {
 
     override fun getRandomRecipe(): Flow<Resource<List<Recipe>>> = flow {
         emit(Resource.Loading())
@@ -28,9 +26,11 @@ class RecipeRepositoryImpl(
                 val data = apiResponse.data
                 emit(Resource.Success(DataMapper.mapRecipeResponseToRecipe(data)))
             }
+
             is ApiResponse.Empty -> {
                 emit(Resource.Success(listOf()))
             }
+
             is ApiResponse.Error -> {
                 emit(Resource.Error(apiResponse.errorMessage))
             }
@@ -39,14 +39,17 @@ class RecipeRepositoryImpl(
 
     override fun getRecipesByIngredients(ingredients: String): Flow<Resource<List<Recipe>>> = flow {
         emit(Resource.Loading())
-        when (val apiResponse = recipeNetworkDataSource.getRecipesByIngredients(ingredients).first()) {
+        when (val apiResponse =
+            recipeNetworkDataSource.getRecipesByIngredients(ingredients).first()) {
             is ApiResponse.Success -> {
                 val data = apiResponse.data
                 emit(Resource.Success(DataMapper.mapRecipesByIngredientsResponseToRecipe(data)))
             }
+
             is ApiResponse.Empty -> {
                 emit(Resource.Success(listOf()))
             }
+
             is ApiResponse.Error -> {
                 emit(Resource.Error(apiResponse.errorMessage))
             }
@@ -60,9 +63,11 @@ class RecipeRepositoryImpl(
                 val data = apiResponse.data
                 emit(Resource.Success(DataMapper.mapRecipeDetail(data)))
             }
+
             is ApiResponse.Empty -> {
                 emit(Resource.Error("Error"))
             }
+
             is ApiResponse.Error -> {
                 emit(Resource.Error(apiResponse.errorMessage))
             }
@@ -70,14 +75,16 @@ class RecipeRepositoryImpl(
     }
 
     override suspend fun persistFetchedCurrentRecipe(fetchedRecipe: RecipeDetail) {
-        GlobalScope.launch(Dispatchers.IO) {
-            currentRecipeDao.upsert(fetchedRecipe)
-        }
+        currentRecipeDao.setFavoriteRecipe(DataMapper.changeRecipeDetailToFavoriteRecipe(fetchedRecipe))
     }
 
-    override suspend fun getPersistedRecipe() : LiveData<RecipeDetail> {
-        return withContext(Dispatchers.IO) {
-            return@withContext currentRecipeDao.getRecipe()
+    override suspend fun removeFavoriteRecipe(recipeId: Int) {
+        currentRecipeDao.removeFavoriteRecipe(recipeId)
+    }
+
+    override fun getPersistedFavoriteRecipeList(): Flow<List<FavoriteRecipe>> {
+        return currentRecipeDao.getAllRecipe().map {
+            DataMapper.mapFavoriteRecipeEntityToFavoriteRecipe(it)
         }
     }
 }

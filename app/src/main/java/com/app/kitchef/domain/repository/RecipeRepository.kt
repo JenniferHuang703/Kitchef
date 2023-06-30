@@ -1,6 +1,6 @@
 package com.app.kitchef.domain.repository
 
-import androidx.lifecycle.LiveData
+import com.app.kitchef.domain.model.FavoriteRecipe
 import com.app.kitchef.domain.model.Recipe
 import com.app.kitchef.domain.model.RecipeDetail
 import com.app.kitchef.domain.utils.Resource
@@ -12,5 +12,6 @@ interface RecipeRepository {
     fun getRecipesByIngredients(ingredients: String): Flow<Resource<List<Recipe>>>
     fun getRecipeDetail(recipeId: Int): Flow<Resource<RecipeDetail>>
     suspend fun persistFetchedCurrentRecipe(fetchedRecipe: RecipeDetail)
-    suspend fun getPersistedRecipe() : LiveData<RecipeDetail>
+    suspend fun removeFavoriteRecipe(recipeId: Int)
+    fun getPersistedFavoriteRecipeList() : Flow<List<FavoriteRecipe>>
 }

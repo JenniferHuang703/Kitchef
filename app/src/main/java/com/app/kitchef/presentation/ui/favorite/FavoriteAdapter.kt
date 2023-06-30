@@ -9,9 +9,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.app.kitchef.R
-import com.app.kitchef.domain.model.Recipe
+import com.app.kitchef.domain.model.FavoriteRecipe
 
-class FavoriteAdapter(private val recipesList: List<Recipe>): RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
+class FavoriteAdapter(private val recipesList: List<FavoriteRecipe>): RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
 
 
     private lateinit var mListener: onItemClickListener
@@ -35,9 +35,9 @@ class FavoriteAdapter(private val recipesList: List<Recipe>): RecyclerView.Adapt
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentRecipe = recipesList[position]
 
-        holder.recipeLabel.text = currentRecipe.label
+        holder.recipeLabel.text = currentRecipe.dishName
         Glide.with(context)
-            .load(currentRecipe.image)
+            .load(currentRecipe.dishImageUrl)
             .centerCrop()
             .into(holder.recipeImage)
 

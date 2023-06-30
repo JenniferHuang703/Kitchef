@@ -1,8 +1,10 @@
 package com.app.kitchef.domain.utils
 
+import com.app.kitchef.data.db.entity.recipeModel.FavoriteRecipeEntity
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRandomRecipesInformationResponse
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRecipeDetailResponse
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRecipesByIngredientsResponseItem
+import com.app.kitchef.domain.model.FavoriteRecipe
 import com.app.kitchef.domain.model.IngredientFull
 import com.app.kitchef.domain.model.Nutrient
 import com.app.kitchef.domain.model.Recipe
@@ -74,13 +76,37 @@ object DataMapper {
             input.dishId ?: -1,
             input.creditText ?: "Anonymous",
             input.instructions ?: "",
-//            steps,
-//            nutrientList,
-//            ingredients,
+            steps,
+            nutrientList,
+            ingredients,
             input.glutenFree ?: false,
             input.dairyFree ?: false,
             input.vegetarian ?: false
         )
+    }
+
+    fun changeRecipeDetailToFavoriteRecipe(
+        input: RecipeDetail
+    ): FavoriteRecipeEntity {
+        return FavoriteRecipeEntity(
+            input.dishId,
+            input.dishName,
+            input.creditText,
+            input.dishImageUrl
+        )
+    }
+
+    fun mapFavoriteRecipeEntityToFavoriteRecipe(
+        input: List<FavoriteRecipeEntity>
+    ): List<FavoriteRecipe> {
+        return input.map {
+            FavoriteRecipe(
+                it.recipeImageUrl,
+                it.recipeName,
+                it.recipeId,
+                it.authorCredit
+            )
+        }
     }
 
 }

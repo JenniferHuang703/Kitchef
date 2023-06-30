@@ -13,11 +13,11 @@ import org.koin.dsl.module
 
 val databaseModule = module {
     single { IngredientDatabase(get()) }
-    single { get<IngredientDatabase>().currentIngredientDao() }
     single { RecipeDatabase(get()) }
-    single { get<RecipeDatabase>().currentRecipeDao() }
+    factory { get<IngredientDatabase>().currentIngredientDao() }
+    factory { get<RecipeDatabase>().currentRecipeDao() }
     single<ConnectivityInterceptor> { ConnectivityInterceptorImpl(get()) }
     single<IngredientNetworkDataSource> { IngredientNetworkDataSourceImpl(get()) }
     single { IngredientApiService(get()) }
-    single<RecipeNetworkDataSource> {RecipeNetworkDataSourceImpl(get())}
+    single<RecipeNetworkDataSource> { RecipeNetworkDataSourceImpl(get()) }
 }

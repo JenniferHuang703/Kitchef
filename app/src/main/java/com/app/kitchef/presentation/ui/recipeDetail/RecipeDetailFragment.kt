@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -101,7 +102,7 @@ class RecipeDetailFragment : ScopeFragment() {
                         null
                     )
                 )
-//                viewModel.persistRecipe(recipe)
+                viewModel.persistRecipe(recipe)
             } else {
                 addToFavoriteBtn.setImageDrawable(
                     ResourcesCompat.getDrawable(
@@ -110,6 +111,7 @@ class RecipeDetailFragment : ScopeFragment() {
                         null
                     )
                 )
+                viewModel.removeFavoriteRecipe(recipe.dishId)
             }
         }
 
