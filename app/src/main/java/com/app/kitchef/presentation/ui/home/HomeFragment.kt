@@ -2,15 +2,12 @@ package com.app.kitchef.presentation.ui.home
 
 import android.content.Context
 import  android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -41,7 +38,6 @@ class HomeFragment : ScopeFragment() {
     private lateinit var rv: RecyclerView
     private lateinit var addIngredientAdapter: AddIngredientsAdapter
     private var displayedIngredientsList = ArrayList<Ingredient>()
-    private var addedIngredientList = ArrayList<Ingredient>()
     private val focusChangeListener = MyOnFocusChangeListener()
 
     private val binding get() = _binding!!
@@ -60,12 +56,13 @@ class HomeFragment : ScopeFragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         addIngredientItemToList()
-        handleRecyclerView(view)
+        handleRecyclerView()
 
         val emptyStateMessage = view.findViewById<TextView>(R.id.emptyStateTV)
         emptyStateMessage.visibility = View.VISIBLE
 
-        onClickListeners(view)
+        onClickListeners()
+        setButtonView()
     }
 
     private fun setHomeTopBar() {
@@ -77,7 +74,7 @@ class HomeFragment : ScopeFragment() {
             if (editable != null) {
                 val newtInput = editable.toString()
                 debounceJob?.cancel()
-                if (lastInput != newtInput) {
+                if (lastInput != newtInput && newtInput != "") {
                     lastInput = newtInput
                     uiScope.launch {
                         delay(500)
@@ -121,8 +118,7 @@ class HomeFragment : ScopeFragment() {
                     }
 
                     is Resource.Success -> {
-                        resource.data?.let{
-                            Log.d("jen", it.toString())
+                        resource.data?.let {
                             displayedIngredientsList.clear()
                             displayedIngredientsList.add(Ingredient(it.id, it.name, it.image))
                         }
@@ -138,52 +134,36 @@ class HomeFragment : ScopeFragment() {
         }
     }
 
-    private fun updateObserver() = launch {
-        viewModel.tempIngredientsList.observe(viewLifecycleOwner, Observer { ingList ->
-            if (ingList == null) return@Observer
-            displayedIngredientsList.clear()
-            displayedIngredientsList.addAll(ingList)
-            binding.recyclerview.adapter?.notifyDataSetChanged()
-        })
-
-        viewModel.modifiedIngredientList.observe(viewLifecycleOwner, Observer { newIngList ->
-            if (newIngList == null) return@Observer
-            addedIngredientList.clear()
-            addedIngredientList.addAll(newIngList)
-//            setButtonView(view)
-        })
-    }
-
-    private fun onClickListeners(view: View) {
-        val proceedToListBtn = view.findViewById<Button>(R.id.proceedToListBtn)
-        proceedToListBtn.setOnClickListener {
+    private fun onClickListeners() {
+        binding.proceedToListBtn.setOnClickListener {
             val directions =
-                HomeFragmentDirections.actionNavHomeToAddedIngredientsFragment(
-                    addedIngredientList.toTypedArray()
-                )
+                HomeFragmentDirections.actionNavHomeToAddedIngredientsFragment()
             findNavController().navigate(directions)
         }
     }
 
-    private fun handleRecyclerView(view: View) {
-        rv = view.findViewById(R.id.recyclerview)
+    private fun handleRecyclerView() {
+        rv = binding.recyclerview
         addIngredientAdapter = AddIngredientsAdapter(displayedIngredientsList)
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = addIngredientAdapter
 
-        addIngredientAdapter.setOnClickListener(object : AddIngredientsAdapter.onItemClickListener {
-            override fun onItemClick(position: Int) {
-                addedIngredientList.add(displayedIngredientsList[position])
-                setButtonView(view)
+        addIngredientAdapter.setOnClickListener(object : AddIngredientsAdapter.OnClickListener {
+            override fun onAddItemClick(ingredient: Ingredient) {
+                viewModel.toggleAddIngredientToList(ingredient)
+            }
+
+            override fun onRemoveItemClick(ingredient: Ingredient) {
+                viewModel.toggleRemoveIngredientToList(ingredient.id)
             }
         })
     }
 
-    private fun setButtonView(view: View) {
-        if (addedIngredientList.isNotEmpty()) {
-            view.findViewById<Button>(R.id.proceedToListBtn).visibility = View.VISIBLE
-            view.findViewById<TextView>(R.id.emptyStateTV).visibility = View.GONE
-        }
+    private fun setButtonView() {
+//        if (addedIngredientList.isNotEmpty()) {
+            binding.proceedToListBtn.visibility = View.VISIBLE
+            binding.emptyStateTV.visibility = View.GONE
+//        }
     }
 
     private fun addIngredientItemToList() {

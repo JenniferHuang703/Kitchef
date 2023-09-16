@@ -1,5 +1,6 @@
 package com.app.kitchef.domain.utils
 
+import com.app.kitchef.data.db.entity.ingredientModel.IngredientEntity
 import com.app.kitchef.data.db.entity.recipeModel.FavoriteRecipeEntity
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRandomRecipesInformationResponse
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRecipeDetailResponse
@@ -115,6 +116,24 @@ object DataMapper {
                 it.recipeName,
                 it.recipeId,
                 it.authorCredit
+            )
+        }
+    }
+
+    fun changeIngredientToIngredientEntity(input: Ingredient): IngredientEntity {
+        return IngredientEntity(
+            input.id,
+            input.name,
+            input.image
+        )
+    }
+
+    fun mapIngredientEntityToIngredient(input: List<IngredientEntity>): List<Ingredient> {
+        return input.map {
+            Ingredient(
+                it.ingredientId,
+                it.name ?: "",
+                it.image ?: "",
             )
         }
     }

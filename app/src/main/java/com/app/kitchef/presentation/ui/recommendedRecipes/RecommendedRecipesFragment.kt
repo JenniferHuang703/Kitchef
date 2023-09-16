@@ -9,25 +9,25 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.kitchef.databinding.FragmentRecommendedRecipesBinding
+import com.app.kitchef.domain.model.Ingredient
 import com.app.kitchef.domain.model.Recipe
 import com.app.kitchef.domain.utils.Resource
 import com.app.kitchef.presentation.ui.base.ScopeFragment
+import com.app.kitchef.presentation.ui.home.AddIngredientsViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RecommendedRecipesFragment : ScopeFragment() {
 
     private val viewModel by viewModel<RecommendedRecipesViewModel>()
+    private val ingredientViewModel by viewModel<AddIngredientsViewModel>()
     private lateinit var rv: RecyclerView
     private lateinit var recommendedRecipesAdapter: RecommendedRecipesAdapter
     private var recipesList = ArrayList<Recipe>()
     private var navController: NavController? = null
-    private val args by navArgs<RecommendedRecipesFragmentArgs>()
-    private var addedIngredientList = ""
     private var _binding: FragmentRecommendedRecipesBinding? = null
     private val binding get() = _binding!!
 
@@ -42,15 +42,25 @@ class RecommendedRecipesFragment : ScopeFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-        convertIngredientToURL(args.ingredientList)
-        observers()
+        getPersistedIngredientList()
         handleRecyclerView()
         onClickListener()
     }
+    private fun getPersistedIngredientList() {
+        ingredientViewModel.ingredientMediatorLiveData.observe(viewLifecycleOwner) { ingredientList ->
+            ingredientList?.let {
+                if (it.isNotEmpty()) {
+                    fetchRecipes(it)
+                } else {
 
-    private fun observers() {
+                }
+            }
+        }
+    }
+
+    private fun fetchRecipes(ingredientList: List<Ingredient>) {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.fetchRecipes(addedIngredientList).collect { resource ->
+            viewModel.fetchRecipes(convertIngredientToURL(ingredientList)).collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {
                     }
@@ -71,16 +81,16 @@ class RecommendedRecipesFragment : ScopeFragment() {
         }
     }
 
-    private fun convertIngredientToURL(ingredientList: Array<String>) {
-        var ingr_str = ""
+    private fun convertIngredientToURL(ingredientList: List<Ingredient>): String {
+        var ingrString = ""
 
         ingredientList.forEach {
             if(it != ingredientList.first())
-                ingr_str = "$ingr_str,"
-            ingr_str += it.lowercase()
+                ingrString = "$ingrString,"
+            ingrString += it.name.lowercase()
         }
 
-        addedIngredientList = ingr_str
+        return ingrString
     }
 
     private fun handleRecyclerView() {

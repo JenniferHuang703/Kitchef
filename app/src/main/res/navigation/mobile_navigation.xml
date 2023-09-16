@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_nav_home_to_addedIngredientsFragment"
             app:destination="@id/addedIngredientsFragment">
-            <argument
-                android:name="addedIngredientList"
-                app:argType="com.app.kitchef.domain.model.Ingredient[]" />
         </action>
 
     </fragment>
@@ -48,15 +45,9 @@
         android:name="com.app.kitchef.presentation.ui.addedIngredients.AddedIngredientsFragment"
         android:label="@string/ingredient_list"
         tools:layout="@layout/fragment_added_ingredients">
-        <argument
-            android:name="addedIngredientList"
-            app:argType="com.app.kitchef.domain.model.Ingredient[]" />
         <action
             android:id="@+id/action_addedIngredientsFragment_to_recommendedRecipesFragment"
             app:destination="@id/recommendedRecipesFragment">
-            <argument
-                android:name="ingredientList"
-                app:argType="string[]" />
         </action>
     </fragment>
     <fragment
@@ -64,9 +55,6 @@
         android:name="com.app.kitchef.presentation.ui.recommendedRecipes.RecommendedRecipesFragment"
         android:label="@string/recommended_recipe"
         tools:layout="@layout/fragment_recommended_recipes">
-        <argument
-            android:name="ingredientList"
-            app:argType="string[]" />
         <action
             android:id="@+id/action_recommendedRecipesFragment_to_recipeDetailFragment"
             app:destination="@id/recipeDetailFragment" />

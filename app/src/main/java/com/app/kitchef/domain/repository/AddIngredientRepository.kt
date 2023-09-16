@@ -7,5 +7,8 @@ import kotlinx.coroutines.flow.Flow
 interface AddIngredientRepository {
 
     suspend fun fetchIngredient(ingredient: String): Flow<Resource<Ingredient>>
+    suspend fun persistAddedIngredient(ingredient: Ingredient)
+    suspend fun removePersistedIngredient(ingredientId: Int)
+    fun getPersistedIngredientList() : Flow<List<Ingredient>>
 }
 

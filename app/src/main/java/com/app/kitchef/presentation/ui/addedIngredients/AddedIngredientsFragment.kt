@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.kitchef.databinding.FragmentAddedIngredientsBinding
@@ -19,8 +18,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class AddedIngredientsFragment : Fragment() {
     private val viewModel by viewModel<AddIngredientsViewModel>()
 
-    private var addedIngredientList = ArrayList<Ingredient>()
-    private val args by navArgs<AddedIngredientsFragmentArgs>()
     private lateinit var rv: RecyclerView
     private var navController: NavController? = null
     private lateinit var addedIngredientAdapter: AddedIngredientsAdapter
@@ -38,25 +35,26 @@ class AddedIngredientsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-
-        if (addedIngredientList.isEmpty())
-            addedIngredientList.addAll(args.addedIngredientList)
-
-        handleRecyclerView()
+        getIngredientList()
         onClickListeners()
     }
 
-    private fun onClickListeners() {
-        val ingredientList = ArrayList<String>()
-        val searchForRecipeBtn = binding.proceedToRecipeBtn
-        searchForRecipeBtn.setOnClickListener {
-            addedIngredientList.forEach {
-                ingredientList.add(it.name)
+    private fun getIngredientList() {
+        viewModel.ingredientMediatorLiveData.observe(viewLifecycleOwner) { ingredientList ->
+            ingredientList?.let {
+                if (it.isNotEmpty()) {
+                    handleRecyclerView(it)
+                } else {
+
+                }
             }
+        }
+    }
+
+    private fun onClickListeners() {
+        binding.proceedToRecipeBtn.setOnClickListener {
             val directions =
-                AddedIngredientsFragmentDirections.actionAddedIngredientsFragmentToRecommendedRecipesFragment(
-                    ingredientList.toTypedArray()
-                )
+                AddedIngredientsFragmentDirections.actionAddedIngredientsFragmentToRecommendedRecipesFragment()
             findNavController().navigate(directions)
         }
 
@@ -67,18 +65,16 @@ class AddedIngredientsFragment : Fragment() {
         }
     }
 
-    private fun handleRecyclerView() {
+    private fun handleRecyclerView(ingredientList: List<Ingredient>) {
         rv = binding.recyclerview
-        addedIngredientAdapter = AddedIngredientsAdapter(addedIngredientList)
+        addedIngredientAdapter = AddedIngredientsAdapter(ingredientList)
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = addedIngredientAdapter
 
-        addedIngredientAdapter.setOnClickListener(object :
-            AddedIngredientsAdapter.OnItemClickListener {
-            override fun onItemClick(position: Int) {
-                addedIngredientList.remove(addedIngredientList[position])
+        addedIngredientAdapter.setOnClickListener(object : AddedIngredientsAdapter.OnClickListener {
+            override fun onRemoveItemClick(ingredient: Ingredient, position: Int) {
+                viewModel.toggleRemoveIngredientToList(ingredient.id)
                 addedIngredientAdapter.notifyItemRemoved(position)
-                viewModel.modifyIngredientList(addedIngredientList)
             }
         })
     }
