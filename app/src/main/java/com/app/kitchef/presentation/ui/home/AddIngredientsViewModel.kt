@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.kitchef.domain.model.Ingredient
 import com.app.kitchef.domain.repository.AddIngredientRepository
-import com.app.kitchef.internal.lazyDeferred
+import com.app.kitchef.domain.utils.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class AddIngredientsViewModel(
@@ -20,40 +22,12 @@ class AddIngredientsViewModel(
     val modifiedIngredientList: LiveData<ArrayList<Ingredient>> = _modifiedIngredientList
     private var ingList = ArrayList<Ingredient>()
 
-    val ingredient by lazyDeferred {
-        ingredientRepository.getCurrentIngredient()
-    }
-
-//    suspend fun fetch(ingredient: String) {
-//        ingredientRepository.fetchIngredient(ingredient)
-//    }
-
-    fun searchIngredientOnQueryTextSubmit(query: String?, ingredientsList: ArrayList<Ingredient>) = viewModelScope.launch {
-        val containText = ingredientsList.filter { it.title.lowercase() == query }
-//        if (containText.isNotEmpty()) {
-//            tempList.add(containText[0])
-//            _tempIngredientList.value = tempList
-//        } else {
-            ingredientRepository.fetchIngredient(query ?: "broccoli")
-//        }
-    }
-
-    fun searchIngredientOnQueryTextChange(newText: String?, ingredientsList: ArrayList<Ingredient>) {
-        tempList.clear()
-        val searchText = newText!!.lowercase()
-        if (searchText.isNotEmpty()) {
-            ingredientsList.forEach { ingredient ->
-                if (ingredient.title.lowercase().contains(searchText)) {
-                    tempList.add(ingredient)
-                }
+    fun getSearchedIngredient(ingredient: String): Flow<Resource<Ingredient>> =
+        flow {
+            ingredientRepository.fetchIngredient(ingredient).collect {
+                emit(it)
             }
-            _tempIngredientList.value = tempList
-        } else {
-            tempList.clear()
-            tempList.addAll(ingredientsList)
-            _tempIngredientList.value = tempList
         }
-    }
 
     fun modifyIngredientList(ingredientList: ArrayList<Ingredient>) {
 //        _modifiedIngredientList.value = ingredientList

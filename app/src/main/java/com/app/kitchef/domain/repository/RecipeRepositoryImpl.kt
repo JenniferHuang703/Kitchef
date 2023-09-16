@@ -1,7 +1,6 @@
 package com.app.kitchef.domain.repository
 
 import com.app.kitchef.data.db.CurrentRecipeDao
-import com.app.kitchef.data.db.entity.recipeModel.FavoriteRecipeEntity
 import com.app.kitchef.data.network.ApiResponse
 import com.app.kitchef.data.network.recipe.RecipeNetworkDataSource
 import com.app.kitchef.domain.model.FavoriteRecipe

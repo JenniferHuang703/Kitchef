@@ -15,7 +15,7 @@ import retrofit2.http.Query
 
 //https://api.spoonacular.com/recipes/findByIngredients?apiKey=92b5e93f470646178f054a3725cedc64&ingredients=apples,+flour,+sugar&number=2
 
-interface SpoonacularApiService {
+interface SpoonacularRecipeApiService {
     @GET("random")
     suspend fun getRandomRecipes(
         @Query("number") resultLimit: Int,
@@ -32,5 +32,4 @@ interface SpoonacularApiService {
         @Path("id") id: Int,
         @Query("includeNutrition") isIncludeNutrition: Boolean
     ): GetRecipeDetailResponse
-
 }

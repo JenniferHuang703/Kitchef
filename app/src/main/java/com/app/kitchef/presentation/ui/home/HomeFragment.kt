@@ -1,11 +1,17 @@
 package com.app.kitchef.presentation.ui.home
 
-import android.os.Bundle
+import android.content.Context
+import  android.os.Bundle
+import android.util.Log
 import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -15,11 +21,15 @@ import com.app.kitchef.R
 import com.app.kitchef.common.StaticIngredientList
 import com.app.kitchef.databinding.FragmentHomeBinding
 import com.app.kitchef.domain.model.Ingredient
+import com.app.kitchef.domain.utils.Resource
+import com.app.kitchef.presentation.ui.MyOnFocusChangeListener
 import com.app.kitchef.presentation.ui.base.ScopeFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.closestKodein
-import org.kodein.di.generic.instance
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.collections.ArrayList
 
@@ -32,6 +42,7 @@ class HomeFragment : ScopeFragment() {
     private lateinit var addIngredientAdapter: AddIngredientsAdapter
     private var displayedIngredientsList = ArrayList<Ingredient>()
     private var addedIngredientList = ArrayList<Ingredient>()
+    private val focusChangeListener = MyOnFocusChangeListener()
 
     private val binding get() = _binding!!
 
@@ -41,20 +52,8 @@ class HomeFragment : ScopeFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        setHomeTopBar()
         return binding.root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        val list = viewModel.getModifiedIngredientList()
-        if (list.isNotEmpty() && list != addedIngredientList) {
-            addedIngredientList.clear()
-            addedIngredientList.addAll(list)
-        }
-
-        updateObserver()
-        bindUI()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,16 +68,74 @@ class HomeFragment : ScopeFragment() {
         onClickListeners(view)
     }
 
-    private fun bindUI() = launch{
-        val currentIngredient = viewModel.ingredient.await()
-
-        currentIngredient.observe(viewLifecycleOwner, Observer {
-            if (it == null) return@Observer
-            val ing = Ingredient(it.parsed[0].food.image, it.parsed[0].food.label)
+    private fun setHomeTopBar() {
+        var lastInput = ""
+        val debounceJob: Job? = null
+        val uiScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+        binding.homeTopBar.searchFieldTextInput.onFocusChangeListener = focusChangeListener
+        binding.homeTopBar.searchFieldTextInput.doAfterTextChanged { editable ->
+            if (editable != null) {
+                val newtInput = editable.toString()
+                debounceJob?.cancel()
+                if (lastInput != newtInput) {
+                    lastInput = newtInput
+                    uiScope.launch {
+                        delay(500)
+                        if (lastInput == newtInput) {
+                            performSearch(newtInput)
+                        }
+                    }
+                }
+            }
+        }
+        binding.homeTopBar.searchFieldTextInput.setOnEditorActionListener { textView, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                textView.clearFocus()
+                val inputManager =
+                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(textView.windowToken, 0)
+                performSearch(textView.text.toString())
+                true
+            } else {
+                false
+            }
+        }
+        binding.homeTopBar.searchFieldTextLayout.setEndIconOnClickListener {
+            it.clearFocus()
+            binding.homeTopBar.searchFieldTextInput.setText("")
+            val inputManager =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(it.windowToken, 0)
             displayedIngredientsList.clear()
-            displayedIngredientsList.add(ing)
+            displayedIngredientsList.addAll(StaticIngredientList.preDefinedIngredientsList)
             binding.recyclerview.adapter?.notifyDataSetChanged()
-        })
+        }
+    }
+
+    private fun performSearch(query: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getSearchedIngredient(query).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+
+                    }
+
+                    is Resource.Success -> {
+                        resource.data?.let{
+                            Log.d("jen", it.toString())
+                            displayedIngredientsList.clear()
+                            displayedIngredientsList.add(Ingredient(it.id, it.name, it.image))
+                        }
+                        binding.recyclerview.adapter?.notifyDataSetChanged()
+                    }
+
+                    is Resource.Error -> {
+                        Toast.makeText(requireContext(), "${resource.message}", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+        }
     }
 
     private fun updateObserver() = launch {
@@ -138,18 +195,4 @@ class HomeFragment : ScopeFragment() {
         super.onDestroyView()
         _binding = null
     }
-
-//    private fun fetchData() {
-//        val apiService = IngredientApiService(ConnectivityInterceptorImpl(this.requireContext()))
-//        val ingredientNetworkDataSource = IngredientNetworkDataSourceImpl(apiService)
-//
-//        ingredientNetworkDataSource.downloadedCurrrentIngredient.observe(viewLifecycleOwner, Observer {
-//            Log.d("jen", it.parsed[0].food.label)
-//            Log.d("jen", it.parsed[0].food.image)
-//        })
-//
-//        GlobalScope.launch(Dispatchers.Main) {
-//            ingredientNetworkDataSource.fetchCurrentIngredient("Carrot", "cooking")
-//        }
-//    }
 }

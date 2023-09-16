@@ -30,9 +30,10 @@ class AddedIngredientsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAddedIngredientsBinding.inflate(inflater, container, false)
-        return binding.root    }
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,9 +49,9 @@ class AddedIngredientsFragment : Fragment() {
     private fun onClickListeners() {
         val ingredientList = ArrayList<String>()
         val searchForRecipeBtn = binding.proceedToRecipeBtn
-        searchForRecipeBtn.setOnClickListener{
+        searchForRecipeBtn.setOnClickListener {
             addedIngredientList.forEach {
-                ingredientList.add(it.title)
+                ingredientList.add(it.name)
             }
             val directions =
                 AddedIngredientsFragmentDirections.actionAddedIngredientsFragmentToRecommendedRecipesFragment(
@@ -72,7 +73,8 @@ class AddedIngredientsFragment : Fragment() {
         rv.layoutManager = LinearLayoutManager(context)
         rv.adapter = addedIngredientAdapter
 
-        addedIngredientAdapter.setOnClickListener(object : AddedIngredientsAdapter.OnItemClickListener {
+        addedIngredientAdapter.setOnClickListener(object :
+            AddedIngredientsAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 addedIngredientList.remove(addedIngredientList[position])
                 addedIngredientAdapter.notifyItemRemoved(position)

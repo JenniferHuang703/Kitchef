@@ -1,28 +1,36 @@
 package com.app.kitchef.data.network.ingredient
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.app.kitchef.domain.api.IngredientApiService
-import com.app.kitchef.internal.NoConnectivityException
+import com.app.kitchef.data.db.entity.spoonacularModel.IngredientSearchInformationResponse
+import com.app.kitchef.data.db.entity.spoonacularModel.IngredientSearchResponse
+import com.app.kitchef.data.network.ApiResponse
+import com.app.kitchef.domain.api.SpoonacularIngredientApiService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import java.lang.Exception
 
 class IngredientNetworkDataSourceImpl(
-    private val ingredientApiService: IngredientApiService
+    private val ingredientApiService: SpoonacularIngredientApiService
 ) : IngredientNetworkDataSource {
 
-    private val _downloadedCurrentIngredient= MutableLiveData<IngredientResponse>()
-    override val downloadedCurrentIngredient: LiveData<IngredientResponse>
-        get() = _downloadedCurrentIngredient
+    override suspend fun getSearchedIngredient(ingredient: String): Flow<ApiResponse<IngredientSearchInformationResponse>> {
+        return flow {
+            try {
+                val response = ingredientApiService.getSearchedIngredient(ingredient, 1)
+                val ingredients = response.results
+                if (ingredients.isNotEmpty()) {
+                    emit(ApiResponse.Success(ingredients[0]))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (exception: Exception) {
+                emit(ApiResponse.Error("get searched ingredient went wrong: $exception"))
+            }
+        }.flowOn(Dispatchers.IO)
 
-    override suspend fun fetchCurrentIngredient(ingredient: String, nutritionType: String) {
-        try {
-            val fetchCurrentIngredient = ingredientApiService
-                .getIngredient(ingredient, nutritionType)
-                .await()
-            _downloadedCurrentIngredient.postValue(fetchCurrentIngredient)
-        }
-        catch (e: NoConnectivityException) {
-            Log.e("Connectivity", "No internet connection", e)
-        }
+
+
+
     }
 }

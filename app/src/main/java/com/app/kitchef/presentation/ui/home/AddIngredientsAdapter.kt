@@ -34,7 +34,7 @@ class AddIngredientsAdapter(private val ingredientList: List<Ingredient>): Recyc
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentIngredient = ingredientList[position]
 
-        holder.ingredientTitle.text = currentIngredient.title
+        holder.ingredientTitle.text = currentIngredient.name
         Glide.with(context)
             .load(currentIngredient.image)
             .centerCrop()

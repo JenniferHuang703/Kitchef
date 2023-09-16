@@ -4,7 +4,9 @@ import com.app.kitchef.data.db.entity.recipeModel.FavoriteRecipeEntity
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRandomRecipesInformationResponse
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRecipeDetailResponse
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRecipesByIngredientsResponseItem
+import com.app.kitchef.data.db.entity.spoonacularModel.IngredientSearchInformationResponse
 import com.app.kitchef.domain.model.FavoriteRecipe
+import com.app.kitchef.domain.model.Ingredient
 import com.app.kitchef.domain.model.IngredientFull
 import com.app.kitchef.domain.model.Nutrient
 import com.app.kitchef.domain.model.Recipe
@@ -12,7 +14,7 @@ import com.app.kitchef.domain.model.RecipeDetail
 import com.app.kitchef.domain.model.Step
 
 object DataMapper {
-    fun mapRecipeResponseToRecipe( input: List<GetRandomRecipesInformationResponse>): List<Recipe> {
+    fun mapRecipeResponseToRecipe(input: List<GetRandomRecipesInformationResponse>): List<Recipe> {
         return input.map {
             Recipe(
                 it.id,
@@ -32,9 +34,17 @@ object DataMapper {
         }
     }
 
+    fun mapIngredientSearchResponseToIngredient(input: IngredientSearchInformationResponse): Ingredient {
+        return Ingredient(
+            input.id,
+            input.name ?: "",
+            input.image ?: ""
+        )
+    }
+
     fun mapRecipeDetail(
         input: GetRecipeDetailResponse
-    ) : RecipeDetail {
+    ): RecipeDetail {
 
         val instruction = input.instruction.orEmpty()
         val steps = if (instruction.isNotEmpty()) {

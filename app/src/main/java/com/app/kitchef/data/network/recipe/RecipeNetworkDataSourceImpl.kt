@@ -4,7 +4,7 @@ import com.app.kitchef.data.db.entity.spoonacularModel.GetRandomRecipesInformati
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRecipeDetailResponse
 import com.app.kitchef.data.db.entity.spoonacularModel.GetRecipesByIngredientsResponseItem
 import com.app.kitchef.data.network.ApiResponse
-import com.app.kitchef.domain.api.SpoonacularApiService
+import com.app.kitchef.domain.api.SpoonacularRecipeApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flowOn
 import java.lang.Exception
 
 class RecipeNetworkDataSourceImpl(
-    private val spoonacularApiService: SpoonacularApiService
+    private val spoonacularApiService: SpoonacularRecipeApiService
 ) : RecipeNetworkDataSource {
 
     override suspend fun getRandomRecipes(): Flow<ApiResponse<List<GetRandomRecipesInformationResponse>>> {

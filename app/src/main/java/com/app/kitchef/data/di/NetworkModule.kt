@@ -1,6 +1,7 @@
 package com.app.kitchef.data.di
 
-import com.app.kitchef.domain.api.SpoonacularApiService
+import com.app.kitchef.domain.api.SpoonacularIngredientApiService
+import com.app.kitchef.domain.api.SpoonacularRecipeApiService
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -8,7 +9,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 const val SPOON_API_KEY_RECIPE = "92b5e93f470646178f054a3725cedc64"
-const val BASE_URL = "https://api.spoonacular.com/recipes/"
+const val RECIPE_BASE_URL = "https://api.spoonacular.com/recipes/"
+const val INGREDIENT_BASE_URL = "https://api.spoonacular.com/food/ingredients/"
 
 val networkModule = module {
     single {
@@ -30,10 +32,19 @@ val networkModule = module {
 
     single {
         val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(RECIPE_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(get())
             .build()
-        retrofit.create(SpoonacularApiService::class.java)
+        retrofit.create(SpoonacularRecipeApiService::class.java)
+    }
+
+    single {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(INGREDIENT_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(get())
+            .build()
+        retrofit.create(SpoonacularIngredientApiService::class.java)
     }
 }

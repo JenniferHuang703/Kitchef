@@ -1,13 +1,10 @@
 package com.app.kitchef.data.network.ingredient
 
-import androidx.lifecycle.LiveData
+import com.app.kitchef.data.db.entity.spoonacularModel.IngredientSearchInformationResponse
+import com.app.kitchef.data.network.ApiResponse
+import kotlinx.coroutines.flow.Flow
 
 interface IngredientNetworkDataSource {
 
-    val downloadedCurrentIngredient: LiveData<IngredientResponse>
-
-    suspend fun fetchCurrentIngredient(
-        ingredient: String,
-        nutritionType: String
-    )
+    suspend fun getSearchedIngredient(ingredient: String): Flow<ApiResponse<IngredientSearchInformationResponse>>
 }

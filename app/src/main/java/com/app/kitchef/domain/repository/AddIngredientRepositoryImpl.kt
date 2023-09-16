@@ -1,54 +1,34 @@
 package com.app.kitchef.domain.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.app.kitchef.data.network.ApiResponse
 import com.app.kitchef.data.network.ingredient.IngredientNetworkDataSource
-import com.app.kitchef.data.network.ingredient.IngredientResponse
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.app.kitchef.domain.model.Ingredient
+import com.app.kitchef.domain.utils.DataMapper
+import com.app.kitchef.domain.utils.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 
 class AddIngredientRepositoryImpl(
-//    private val currentIngredientDao: CurrentIngredientDao,
     private val ingredientNetworkDataSource: IngredientNetworkDataSource
 ) : AddIngredientRepository {
 
-    private val _searchedIngredientInfo = MutableLiveData<IngredientResponse>()
-    override val searchedIngredientInfo: LiveData<IngredientResponse>
-        get() = _searchedIngredientInfo
+    override suspend fun fetchIngredient(ingredient: String): Flow<Resource<Ingredient>> = flow {
+        emit(Resource.Loading())
+        when (val apiResponse = ingredientNetworkDataSource.getSearchedIngredient(ingredient).first()) {
+            is ApiResponse.Success -> {
+                val data = apiResponse.data
+                emit(Resource.Success(DataMapper.mapIngredientSearchResponseToIngredient(data)))
+            }
 
-    init {
-        ingredientNetworkDataSource.downloadedCurrentIngredient.observeForever { newCurrentIngredient ->
-            _searchedIngredientInfo.postValue(newCurrentIngredient)
+            is ApiResponse.Empty -> {
+                emit(Resource.Success(Ingredient(0,"","")))
+            }
+
+            is ApiResponse.Error -> {
+                emit(Resource.Error(apiResponse.errorMessage))
+            }
         }
     }
-
-    override suspend fun fetchIngredient(ingredient: String) {
-        ingredientNetworkDataSource.fetchCurrentIngredient(ingredient, "cooking")
-    }
-
-    override suspend fun getCurrentIngredient(): LiveData<out IngredientResponse> {
-        return withContext(Dispatchers.IO) {
-            return@withContext searchedIngredientInfo
-        }
-    }
-
-
-//    init {
-//        ingredientNetworkDataSource.downloadedCurrrentIngredient.observeForever{ newCurrentIngredient ->
-//            persistFetchedCurrentIngredient(newCurrentIngredient)
-//        }
-//    }
-//
-//    override suspend fun getCurrentIngredient(): LiveData<out FoodX> {
-//        return withContext(Dispatchers.IO) {
-//            return@withContext currentIngredientDao.getIngredient()
-//        }
-//    }
-//
-//    private fun persistFetchedCurrentIngredient(fetchedIngredient: IngredientResponse) {
-//        GlobalScope.launch(Dispatchers.IO) {
-//            currentIngredientDao.upsert(fetchedIngredient.parsed[0].food)
-//        }
-//    }
 
 }
