@@ -31,6 +31,22 @@ class RecipeNetworkDataSourceImpl(
         }.flowOn(Dispatchers.IO)
     }
 
+    override suspend fun getSearchedRecipes(): Flow<ApiResponse<List<GetRandomRecipesInformationResponse>>> {
+        return flow {
+            try {
+                val response = spoonacularApiService.getSearchedRecipes("pasta")
+                val recipes = response.recipes
+                if (recipes.isNotEmpty()) {
+                    emit(ApiResponse.Success(recipes))
+                } else {
+                    emit(ApiResponse.Empty)
+                }
+            } catch (exception: Exception) {
+                emit(ApiResponse.Error("get random recipes went wrong: $exception"))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
     override suspend fun getRecipesByIngredients(ingredients: String): Flow<ApiResponse<List<GetRecipesByIngredientsResponseItem>>> {
         return flow {
             try {

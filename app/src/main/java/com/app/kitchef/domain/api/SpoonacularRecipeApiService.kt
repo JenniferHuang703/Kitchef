@@ -21,6 +21,11 @@ interface SpoonacularRecipeApiService {
         @Query("number") resultLimit: Int,
     ): GetRandomRecipesResponse
 
+    @GET("complexSearch")
+    suspend fun getSearchedRecipes(
+        @Query("query") recipe: String,
+    ): GetRandomRecipesResponse
+
     @GET("findByIngredients")
     suspend fun getRecipesByIngredients(
         @Query("ingredients") ingredients: String,

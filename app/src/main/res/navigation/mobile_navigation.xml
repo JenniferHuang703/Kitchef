@@ -14,6 +14,9 @@
             android:id="@+id/action_nav_home_to_addedIngredientsFragment"
             app:destination="@id/addedIngredientsFragment">
         </action>
+        <action
+            android:id="@+id/action_homeFragment_to_recommendedRecipesFragment"
+            app:destination="@id/recommendedRecipesFragment" />
 
     </fragment>
 

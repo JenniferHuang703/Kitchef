@@ -14,4 +14,11 @@ class RecipeBookViewModel( private val recipeRepository: RecipeRepository): View
             emit(it)
         }
     }
+
+    fun getSearchedRecipe(textInput: String): Flow<Resource<List<Recipe>>> =
+        flow {
+            recipeRepository.getRecipe(textInput).collect {
+                emit(it)
+            }
+        }
 }

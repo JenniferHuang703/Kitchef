@@ -20,6 +20,7 @@ import com.app.kitchef.databinding.FragmentHomeBinding
 import com.app.kitchef.domain.model.Ingredient
 import com.app.kitchef.domain.utils.Resource
 import com.app.kitchef.presentation.ui.MyOnFocusChangeListener
+import com.app.kitchef.presentation.ui.addedIngredients.AddedIngredientsFragmentDirections
 import com.app.kitchef.presentation.ui.base.ScopeFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -135,9 +136,15 @@ class HomeFragment : ScopeFragment() {
     }
 
     private fun onClickListeners() {
-        binding.proceedToListBtn.setOnClickListener {
+        binding.viewIngredientsListBtn.setOnClickListener {
             val directions =
                 HomeFragmentDirections.actionNavHomeToAddedIngredientsFragment()
+            findNavController().navigate(directions)
+        }
+
+        binding.searchRecipeBtn.setOnClickListener {
+            val directions =
+                HomeFragmentDirections.actionHomeFragmentToRecommendedRecipesFragment()
             findNavController().navigate(directions)
         }
     }
@@ -161,7 +168,7 @@ class HomeFragment : ScopeFragment() {
 
     private fun setButtonView() {
 //        if (addedIngredientList.isNotEmpty()) {
-            binding.proceedToListBtn.visibility = View.VISIBLE
+            binding.viewIngredientsListBtn.visibility = View.VISIBLE
             binding.emptyStateTV.visibility = View.GONE
 //        }
     }

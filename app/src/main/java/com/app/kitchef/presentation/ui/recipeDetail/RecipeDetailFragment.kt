@@ -26,7 +26,7 @@ class RecipeDetailFragment : ScopeFragment() {
     private val args by navArgs<RecipeDetailFragmentArgs>()
     private var addToFavoriteBtnIsClicked = false
     private var _binding: FragmentRecipeDetailBinding? = null
-    private val binding  get() = _binding!!
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +41,11 @@ class RecipeDetailFragment : ScopeFragment() {
         observers()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.setLike(args.recipeId)
+    }
+
     private fun observers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getRecipeDetail(args.recipeId).collect { resource ->
@@ -50,7 +55,7 @@ class RecipeDetailFragment : ScopeFragment() {
 
                     is Resource.Success -> {
                         resource.data?.let {
-                           setUpViews(it)
+                            setUpViews(it)
                         }
                     }
 
@@ -59,6 +64,28 @@ class RecipeDetailFragment : ScopeFragment() {
                             .show()
                     }
                 }
+            }
+        }
+
+        viewModel.isLiked.observe(viewLifecycleOwner) {
+            addToFavoriteBtnIsClicked = !addToFavoriteBtnIsClicked
+
+            if (it == true) {
+                binding.addToFavoriteBtn.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.ic_favorite_full,
+                        null
+                    )
+                )
+            } else {
+                binding.addToFavoriteBtn.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.ic_favorite_empty,
+                        null
+                    )
+                )
             }
         }
     }
@@ -92,26 +119,9 @@ class RecipeDetailFragment : ScopeFragment() {
 
         instruction.text = recipe.shortInstruction
 
-        addToFavoriteBtn.setOnClickListener {
-            addToFavoriteBtnIsClicked = !addToFavoriteBtnIsClicked
-            if (addToFavoriteBtnIsClicked) {
-                addToFavoriteBtn.setImageDrawable(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        R.drawable.ic_favorite_full,
-                        null
-                    )
-                )
-                viewModel.persistRecipe(recipe)
-            } else {
-                addToFavoriteBtn.setImageDrawable(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        R.drawable.ic_favorite_empty,
-                        null
-                    )
-                )
-                viewModel.removeFavoriteRecipe(recipe.dishId)
+        addToFavoriteBtn.apply {
+            setOnClickListener {
+                viewModel.toggleLikeRecipe(recipe)
             }
         }
 
