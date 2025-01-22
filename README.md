@@ -22,4 +22,4 @@ then add the ingredient to the ingredient list.
 # Technology 
 * Kotlin
 * Android Room Database
-* Edamam Recipe Search API
+* Spoonacular Recipe Search API
